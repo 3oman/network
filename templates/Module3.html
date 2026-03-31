@@ -1,0 +1,966 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Module 3 — Protocols & Models</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#060912;--bg2:#0d1220;--bg3:#131929;--card:#0f1828;
+  --border:rgba(139,92,246,.1);--border2:rgba(139,92,246,.28);
+  --a1:#8b5cf6;--a2:#06b6d4;--a3:#f59e0b;--a4:#10b981;--a5:#f43f5e;--a6:#e879f9;
+  --text:#e2e8f0;--t2:#94a3b8;--t3:#475569;
+  --glow:rgba(139,92,246,.14);--r:14px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:'Syne',sans-serif;min-height:100vh;overflow-x:hidden}
+body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(139,92,246,.022) 1px,transparent 1px),linear-gradient(90deg,rgba(139,92,246,.022) 1px,transparent 1px);background-size:48px 48px;pointer-events:none;z-index:0}
+
+/* HERO */
+.hero{position:relative;text-align:center;padding:72px 20px 52px;z-index:1}
+.hero::before{content:'';position:absolute;top:-80px;left:50%;transform:translateX(-50%);width:700px;height:450px;background:radial-gradient(ellipse,rgba(139,92,246,.18) 0%,transparent 65%);pointer-events:none}
+.badge{display:inline-flex;align-items:center;gap:8px;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--a1);border:1px solid var(--border2);background:rgba(139,92,246,.07);padding:7px 18px;border-radius:100px;margin-bottom:22px;animation:up .5s ease both}
+.pulse{width:6px;height:6px;border-radius:50%;background:var(--a4);animation:blink 2s infinite}
+.hero h1{font-size:clamp(28px,6vw,56px);font-weight:800;line-height:1.1;background:linear-gradient(135deg,#e2e8f0 0%,#8b5cf6 40%,#06b6d4 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:14px;animation:up .5s .1s ease both}
+.hero p{font-size:15px;color:var(--t2);max-width:520px;margin:0 auto 32px;line-height:1.7;animation:up .5s .2s ease both}
+.hero-chips{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;animation:up .5s .3s ease both}
+.chip{background:var(--card);border:1px solid var(--border);border-radius:100px;padding:8px 18px;font-size:13px;color:var(--t2)}
+.chip strong{color:var(--text)}
+
+/* NAV */
+.nav{position:sticky;top:0;z-index:100;background:rgba(6,9,18,.92);backdrop-filter:blur(18px);border-bottom:1px solid var(--border)}
+.nav-inner{display:flex;gap:2px;overflow-x:auto;padding:10px 14px;max-width:1100px;margin:0 auto;scrollbar-width:none}
+.nav-inner::-webkit-scrollbar{display:none}
+.nb{flex-shrink:0;padding:8px 15px;border-radius:8px;border:none;background:transparent;color:var(--t2);font-family:'Syne',sans-serif;font-size:13px;cursor:pointer;transition:all .2s;white-space:nowrap}
+.nb.on{background:rgba(139,92,246,.12);color:var(--a1)}
+.nb:hover:not(.on){background:rgba(255,255,255,.04);color:var(--text)}
+
+/* MAIN */
+.main{max-width:1100px;margin:0 auto;padding:36px 16px 80px}
+.sec{display:none}.sec.on{display:block;animation:fade .35s ease}
+
+/* CARD */
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:22px;margin-bottom:18px;position:relative;overflow:hidden;transition:border-color .2s,box-shadow .2s}
+.card:hover{border-color:var(--border2);box-shadow:0 0 28px var(--glow)}
+.card::after{content:'';position:absolute;top:0;right:0;width:140px;height:140px;background:radial-gradient(circle at top right,rgba(139,92,246,.05),transparent 65%);pointer-events:none}
+
+/* GRID */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+@media(max-width:700px){.g2,.g3{grid-template-columns:1fr}}
+
+/* TAGS */
+.tag{display:inline-block;font-size:10px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;padding:3px 11px;border-radius:100px;margin-bottom:10px}
+.tv{background:rgba(139,92,246,.1);color:var(--a1);border:1px solid rgba(139,92,246,.2)}
+.tc{background:rgba(6,182,212,.1);color:var(--a2);border:1px solid rgba(6,182,212,.2)}
+.to{background:rgba(245,158,11,.1);color:var(--a3);border:1px solid rgba(245,158,11,.2)}
+.tg{background:rgba(16,185,129,.1);color:var(--a4);border:1px solid rgba(16,185,129,.2)}
+.tr{background:rgba(244,63,94,.1);color:var(--a5);border:1px solid rgba(244,63,94,.2)}
+.tp{background:rgba(232,121,249,.1);color:var(--a6);border:1px solid rgba(232,121,249,.2)}
+
+h2{font-size:20px;font-weight:700;margin-bottom:8px}
+h3{font-size:15px;font-weight:600;margin-bottom:8px}
+p,li{font-size:14px;color:var(--t2);line-height:1.75}
+ul{padding-right:18px}li{margin-bottom:5px}
+code{font-family:'JetBrains Mono',monospace;font-size:12px;background:rgba(139,92,246,.09);color:var(--a1);padding:2px 7px;border-radius:5px;border:1px solid rgba(139,92,246,.15)}
+.ex{background:rgba(139,92,246,.05);border-right:3px solid var(--a1);border-radius:0 8px 8px 0;padding:11px 15px;margin:10px 0;font-size:13px;color:var(--t2);line-height:1.7;font-family:'JetBrains Mono',monospace}
+.ex.c{border-color:var(--a2);background:rgba(6,182,212,.05)}
+.ex.o{border-color:var(--a3);background:rgba(245,158,11,.05)}
+.ex.g{border-color:var(--a4);background:rgba(16,185,129,.05)}
+.ex.r{border-color:var(--a5);background:rgba(244,63,94,.05)}
+.alert{display:flex;gap:10px;padding:11px 15px;border-radius:8px;margin:10px 0;font-size:13px;line-height:1.6}
+.ai{background:rgba(139,92,246,.07);border:1px solid rgba(139,92,246,.2);color:var(--a1)}
+.ac2{background:rgba(6,182,212,.07);border:1px solid rgba(6,182,212,.2);color:var(--a2)}
+.ag{background:rgba(16,185,129,.07);border:1px solid rgba(16,185,129,.2);color:var(--a4)}
+.ao{background:rgba(245,158,11,.07);border:1px solid rgba(245,158,11,.2);color:var(--a3)}
+.ar{background:rgba(244,63,94,.07);border:1px solid rgba(244,63,94,.2);color:var(--a5)}
+
+.tbl{width:100%;border-collapse:collapse;font-size:13px;margin-top:10px}
+.tbl th{background:rgba(139,92,246,.08);color:var(--a1);font-weight:600;padding:10px 13px;text-align:left;border-bottom:1px solid var(--border2);font-size:11px;letter-spacing:.5px}
+.tbl td{padding:9px 13px;color:var(--t2);border-bottom:1px solid var(--border);line-height:1.6}
+.tbl tr:last-child td{border-bottom:none}
+.tbl tr:hover td{background:rgba(139,92,246,.025)}
+
+/* SECTION HEADER */
+.sh{display:flex;align-items:center;gap:14px;margin-bottom:24px}
+.si{width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
+.sh h1{font-size:clamp(18px,3vw,26px);font-weight:800}
+.sh p{font-size:13px;color:var(--t2);margin-top:3px}
+
+/* DELIVERY INTERACTIVE */
+.dlv-wrap{display:flex;flex-direction:column;gap:10px;margin-top:12px}
+.dlv-btn{display:flex;align-items:center;gap:12px;padding:14px 18px;border-radius:10px;border:1px solid var(--border);background:var(--bg3);cursor:pointer;transition:all .2s;text-align:left;width:100%}
+.dlv-btn:hover,.dlv-btn.on{border-color:var(--border2);background:rgba(139,92,246,.07)}
+.dlv-icon{font-size:22px;flex-shrink:0}
+.dlv-label{font-size:14px;font-weight:600;font-family:'Syne',sans-serif}
+.dlv-sub{font-size:12px;color:var(--t3);margin-top:2px}
+.dlv-vis{margin-top:14px;display:none}.dlv-vis.on{display:block;animation:fade .3s ease}
+.node-row{display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap;margin:10px 0}
+.node{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;border:2px solid var(--border);background:var(--bg3);transition:all .4s;font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700}
+.node.src{border-color:var(--a1);background:rgba(139,92,246,.15);color:var(--a1)}
+.node.dst{border-color:var(--a4);background:rgba(16,185,129,.15);color:var(--a4)}
+.node.off{border-color:var(--t3);background:var(--bg3);color:var(--t3);opacity:.5}
+.arrow{font-size:18px;color:var(--t3);animation:slideR .6s infinite alternate}
+
+/* PROTOCOL CARDS INTERACTIVE */
+.proto-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-top:14px}
+.pc{background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:16px;cursor:pointer;transition:all .2s;position:relative}
+.pc:hover,.pc.on{border-color:var(--border2);transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,.3)}
+.pc-name{font-size:14px;font-weight:700;margin-bottom:5px}
+.pc-type{font-size:10px;font-weight:600;letter-spacing:1px;text-transform:uppercase;margin-bottom:8px}
+.pc-desc{font-size:12px;color:var(--t2);line-height:1.6;display:none}
+.pc.on .pc-desc{display:block;animation:fade .25s ease}
+
+/* OSI INTERACTIVE */
+.osi-wrap{margin-top:12px}
+.osi-layer{display:flex;align-items:center;gap:12px;padding:12px 16px;border-radius:10px;margin-bottom:6px;cursor:pointer;transition:all .25s;border:1px solid transparent}
+.osi-layer:hover,.osi-layer.on{border-color:var(--border2)}
+.osi-num{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;font-family:'JetBrains Mono',monospace;flex-shrink:0}
+.osi-name{font-size:14px;font-weight:600;flex:1}
+.osi-pdu{font-size:11px;font-family:'JetBrains Mono',monospace;color:var(--t3)}
+.osi-detail{font-size:13px;color:var(--t2);line-height:1.7;padding:10px 12px;border-radius:8px;margin-top:6px;display:none}
+.osi-layer.on .osi-detail{display:block;animation:fade .25s ease}
+
+/* ENCAPSULATION STEPPER */
+.enc-steps{margin-top:14px}
+.enc-step{display:flex;gap:16px;margin-bottom:16px;align-items:flex-start}
+.enc-num{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;font-family:'JetBrains Mono',monospace;flex-shrink:0}
+.enc-body h4{font-size:14px;font-weight:600;margin-bottom:5px}
+.enc-body p{font-size:13px;color:var(--t2);line-height:1.65}
+.pdu-visual{display:flex;flex-direction:column;gap:6px;margin-top:14px}
+.pdu-row{display:flex;gap:4px;align-items:center;font-size:12px;font-family:'JetBrains Mono',monospace}
+.pdu-lbl{width:80px;color:var(--t3);flex-shrink:0}
+.pdu-hdr{padding:7px 12px;border-radius:6px;font-weight:600;font-size:11px;white-space:nowrap}
+.pdu-data{flex:1;padding:7px 12px;border-radius:6px;background:rgba(255,255,255,.04);color:var(--t2);border:1px solid var(--border);font-size:11px}
+
+/* TIMING INTERACTIVE */
+.timing-sim{background:var(--bg3);border-radius:12px;padding:18px;margin-top:14px}
+.ts-btns{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap}
+.ts-btn{padding:8px 14px;border-radius:8px;border:1px solid var(--border);background:transparent;color:var(--t2);font-family:'Syne',sans-serif;font-size:12px;cursor:pointer;transition:all .2s}
+.ts-btn.on{border-color:var(--a1);color:var(--a1);background:rgba(139,92,246,.08)}
+.ts-panel{display:none;font-size:13px;color:var(--t2);line-height:1.75}
+.ts-panel.on{display:block;animation:fade .3s ease}
+
+/* PROGRESS BAR */
+.pbw{display:flex;align-items:center;gap:10px;margin-bottom:20px}
+.pb{flex:1;height:4px;background:var(--bg3);border-radius:2px;overflow:hidden}
+.pbf{height:100%;background:linear-gradient(90deg,var(--a1),var(--a2));border-radius:2px;transition:width .4s ease}
+.pt{font-size:12px;color:var(--t3);font-family:'JetBrains Mono',monospace;white-space:nowrap}
+
+/* QUIZ */
+.qq{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:20px;margin-bottom:14px}
+.qq.lk{pointer-events:none}
+.qn{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--t3);font-family:'JetBrains Mono',monospace;margin-bottom:9px}
+.qt{font-size:15px;font-weight:600;margin-bottom:14px;line-height:1.5}
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+@media(max-width:500px){.opts{grid-template-columns:1fr}}
+.ob{padding:10px 14px;border-radius:8px;border:1px solid var(--border);background:var(--bg3);color:var(--t2);font-family:'Syne',sans-serif;font-size:13px;cursor:pointer;text-align:left;transition:all .2s;line-height:1.5}
+.ob:hover{border-color:var(--border2);color:var(--text)}
+.ob.ok{background:rgba(16,185,129,.09);border-color:rgba(16,185,129,.4);color:var(--a4)}
+.ob.no{background:rgba(244,63,94,.09);border-color:rgba(244,63,94,.4);color:var(--a5)}
+.qfb{font-size:13px;margin-top:11px;padding:10px 14px;border-radius:8px;display:none}
+.fb-ok{background:rgba(16,185,129,.07);color:var(--a4)}
+.fb-no{background:rgba(244,63,94,.07);color:var(--a5)}
+.qscore{text-align:center;padding:40px;background:var(--card);border-radius:var(--r);border:1px solid var(--border);display:none}
+.sc-big{font-size:60px;font-weight:800;color:var(--a4);font-family:'JetBrains Mono',monospace}
+.sc-sub{color:var(--t2);font-size:14px;margin:8px 0 20px}
+.btn{padding:10px 24px;border-radius:8px;font-family:'Syne',sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:all .2s;margin:4px;border:none}
+.btn-o{border:1px solid var(--border2)!important;background:transparent;color:var(--a1)}
+.btn-o:hover{background:rgba(139,92,246,.08)}
+
+/* TCP/IP LAYER BUILDER */
+.tcpip-layers{display:flex;flex-direction:column;gap:0;margin-top:14px;border-radius:12px;overflow:hidden;border:1px solid var(--border)}
+.tl{display:flex;align-items:center;gap:16px;padding:14px 18px;border-bottom:1px solid var(--border);cursor:pointer;transition:background .2s;position:relative}
+.tl:last-child{border-bottom:none}
+.tl:hover{background:rgba(139,92,246,.04)}
+.tl.on{background:rgba(139,92,246,.08)}
+.tl-num{font-size:11px;font-weight:700;font-family:'JetBrains Mono',monospace;width:24px;color:var(--t3)}
+.tl-name{font-size:14px;font-weight:600;flex:1}
+.tl-protos{display:flex;gap:6px;flex-wrap:wrap}
+.proto-badge{font-size:10px;padding:3px 8px;border-radius:100px;font-family:'JetBrains Mono',monospace;font-weight:600}
+.tl-detail{display:none;padding:12px 18px;background:rgba(139,92,246,.05);border-top:1px solid var(--border);font-size:13px;color:var(--t2);line-height:1.7}
+.tl.on+.tl-detail,.tl.on~.tl-detail:first-of-type{display:none}
+
+/* scroll dots */
+.sdots{display:flex;gap:6px;justify-content:center;padding:12px 0 0}
+.sd{width:8px;height:8px;border-radius:50%;background:var(--bg3);cursor:pointer;transition:background .2s}
+.sd.on{background:var(--a1)}
+
+@keyframes up{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fade{from{opacity:0}to{opacity:1}}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+@keyframes slideR{from{transform:translateX(-4px)}to{transform:translateX(4px)}}
+::-webkit-scrollbar{width:5px;height:5px}::-webkit-scrollbar-track{background:var(--bg)}::-webkit-scrollbar-thumb{background:var(--bg3);border-radius:3px}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="badge"><span class="pulse"></span>Cisco CCNA · ITN v7.0</div>
+  <h1>Module 3<br>Protocols &amp; Models</h1>
+  <p>How devices agree to communicate — rules, protocols, OSI, TCP/IP, and encapsulation</p>
+  <div class="hero-chips">
+    <div class="chip"><strong>6</strong> Topics</div>
+    <div class="chip"><strong>4</strong> Protocol Types</div>
+    <div class="chip"><strong>7</strong> OSI Layers</div>
+    <div class="chip"><strong>10</strong> Quiz Questions</div>
+  </div>
+</div>
+
+<div class="nav">
+  <div class="nav-inner" id="navEl">
+    <button class="nb on" onclick="go(0)">📜 The Rules</button>
+    <button class="nb" onclick="go(1)">🔌 Protocols</button>
+    <button class="nb" onclick="go(2)">📦 Protocol Suites</button>
+    <button class="nb" onclick="go(3)">🏛️ OSI Model</button>
+    <button class="nb" onclick="go(4)">🔄 TCP/IP Model</button>
+    <button class="nb" onclick="go(5)">📬 Encapsulation</button>
+    <button class="nb" onclick="go(6)">✅ Quiz</button>
+  </div>
+</div>
+
+<div class="main">
+
+<!-- ===== 0: THE RULES ===== -->
+<div class="sec on" id="s0">
+  <div class="sh">
+    <div class="si" style="background:rgba(139,92,246,.12)">📜</div>
+    <div><h1>The Rules</h1><p>Section 3.1 — Communications fundamentals and protocol requirements</p></div>
+  </div>
+
+  <div class="g2">
+    <div class="card">
+      <span class="tag tv">3.1.2 Fundamentals</span>
+      <h3>3 Elements of Any Communication</h3>
+      <div style="display:flex;flex-direction:column;gap:10px;margin-top:12px">
+        <div style="display:flex;align-items:center;gap:12px;padding:12px;background:var(--bg3);border-radius:10px;border:1px solid var(--border)">
+          <span style="font-size:20px">📤</span>
+          <div><div style="font-size:13px;font-weight:600">Source (Sender)</div><div style="font-size:12px;color:var(--t2)">The device that originates the message</div></div>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px;padding:12px;background:var(--bg3);border-radius:10px;border:1px solid var(--border)">
+          <span style="font-size:20px">📡</span>
+          <div><div style="font-size:13px;font-weight:600">Channel (Media)</div><div style="font-size:12px;color:var(--t2)">The path the communication travels</div></div>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px;padding:12px;background:var(--bg3);border-radius:10px;border:1px solid var(--border)">
+          <span style="font-size:20px">📥</span>
+          <div><div style="font-size:13px;font-weight:600">Destination (Receiver)</div><div style="font-size:12px;color:var(--t2)">The device that receives the message</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <span class="tag tc">3.1.4 Rule Requirements</span>
+      <h3>Protocols Must Account For:</h3>
+      <ul style="margin-top:10px">
+        <li>An identified <strong>sender and receiver</strong></li>
+        <li>Common <strong>language and grammar</strong></li>
+        <li><strong>Speed and timing</strong> of delivery</li>
+        <li><strong>Confirmation / acknowledgment</strong> requirements</li>
+      </ul>
+      <div class="alert ai" style="margin-top:12px"><span>💡</span><span>A connection alone is not enough — devices must agree on <strong>how</strong> to communicate</span></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <span class="tag to">3.1.5 Network Protocol Requirements</span>
+    <h3>5 Requirements Every Network Protocol Covers</h3>
+    <div class="g3" style="margin-top:14px">
+      <div style="background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:14px">
+        <div style="font-size:20px;margin-bottom:6px">🔢</div>
+        <div style="font-size:13px;font-weight:600;margin-bottom:4px">Message Encoding</div>
+        <div style="font-size:12px;color:var(--t2)">Convert data → bits → signals (electric/light/wireless)</div>
+      </div>
+      <div style="background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:14px">
+        <div style="font-size:20px;margin-bottom:6px">📋</div>
+        <div style="font-size:13px;font-weight:600;margin-bottom:4px">Formatting & Encapsulation</div>
+        <div style="font-size:12px;color:var(--t2)">Specific structure/format for each message type</div>
+      </div>
+      <div style="background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:14px">
+        <div style="font-size:20px;margin-bottom:6px">📏</div>
+        <div style="font-size:13px;font-weight:600;margin-bottom:4px">Message Size</div>
+        <div style="font-size:12px;color:var(--t2)">Break large data into smaller pieces</div>
+      </div>
+      <div style="background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:14px">
+        <div style="font-size:20px;margin-bottom:6px">⏱️</div>
+        <div style="font-size:13px;font-weight:600;margin-bottom:4px">Message Timing</div>
+        <div style="font-size:12px;color:var(--t2)">Flow control, timeout, access method</div>
+      </div>
+      <div style="background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:14px">
+        <div style="font-size:20px;margin-bottom:6px">📬</div>
+        <div style="font-size:13px;font-weight:600;margin-bottom:4px">Delivery Options</div>
+        <div style="font-size:12px;color:var(--t2)">Unicast, Multicast, or Broadcast</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TIMING INTERACTIVE -->
+  <div class="card">
+    <span class="tag tv">3.1.9 Interactive — Message Timing</span>
+    <h3>Explore timing concepts:</h3>
+    <div class="timing-sim">
+      <div class="ts-btns">
+        <button class="ts-btn on" onclick="showTS('fc',this)">Flow Control</button>
+        <button class="ts-btn" onclick="showTS('rt',this)">Response Timeout</button>
+        <button class="ts-btn" onclick="showTS('am',this)">Access Method</button>
+        <button class="ts-btn" onclick="showTS('col',this)">Collisions</button>
+      </div>
+      <div class="ts-panel on" id="ts-fc">
+        <strong style="color:var(--a1)">Flow Control</strong> — manages the rate of data transmission.<br><br>
+        Defines how much data can be sent and at what speed. Prevents a fast sender from overwhelming a slow receiver.<br>
+        <div class="ex" style="margin-top:10px">Protocol example: TCP uses a sliding window to control flow — the receiver tells the sender how much buffer space it has.</div>
+      </div>
+      <div class="ts-panel" id="ts-rt">
+        <strong style="color:var(--a3)">Response Timeout</strong> — how long a device waits for a reply.<br><br>
+        If no reply arrives within the timeout period, the sender may retransmit or declare an error.<br>
+        <div class="ex o" style="margin-top:10px">Example: TCP waits for an ACK. If none arrives within the timeout, it retransmits the segment.</div>
+      </div>
+      <div class="ts-panel" id="ts-am">
+        <strong style="color:var(--a4)">Access Method</strong> — determines when a device can send.<br><br>
+        Needed on shared media where multiple devices compete to transmit simultaneously.<br>
+        <div class="ex g" style="margin-top:10px">CSMA/CD — Carrier Sense Multiple Access / Collision Detection (Ethernet wired)<br>CSMA/CA — Collision Avoidance (Wi-Fi wireless)</div>
+      </div>
+      <div class="ts-panel" id="ts-col">
+        <strong style="color:var(--a5)">Collisions</strong> — when two devices send at the same time.<br><br>
+        <div class="g2" style="margin-top:8px">
+          <div class="ex r">⚡ <strong>Proactive</strong><br>Avoid collisions before they happen<br>→ CSMA/CA (Wi-Fi)</div>
+          <div class="ex o">🔧 <strong>Reactive</strong><br>Recover after a collision occurs<br>→ CSMA/CD (Ethernet)</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DELIVERY INTERACTIVE -->
+  <div class="card">
+    <span class="tag tc">3.1.10 Interactive — Delivery Options</span>
+    <h3>Choose a delivery method:</h3>
+    <div class="dlv-wrap">
+      <button class="dlv-btn on" onclick="showDlv('uni',this)">
+        <span class="dlv-icon">👤</span>
+        <div><div class="dlv-label">Unicast</div><div class="dlv-sub">One sender → One specific receiver</div></div>
+      </button>
+      <button class="dlv-btn" onclick="showDlv('multi',this)">
+        <span class="dlv-icon">👥</span>
+        <div><div class="dlv-label">Multicast</div><div class="dlv-sub">One sender → A selected group</div></div>
+      </button>
+      <button class="dlv-btn" onclick="showDlv('broad',this)">
+        <span class="dlv-icon">📣</span>
+        <div><div class="dlv-label">Broadcast</div><div class="dlv-sub">One sender → ALL devices on the network</div></div>
+      </button>
+    </div>
+    <div class="dlv-vis on" id="dv-uni">
+      <div class="node-row">
+        <div class="node src">SRC</div>
+        <span class="arrow">→</span>
+        <div class="node dst">DST</div>
+        <div class="node off">B</div>
+        <div class="node off">C</div>
+        <div class="node off">D</div>
+      </div>
+      <div class="ex" style="margin-top:6px">Example: Browsing a website — your device (SRC) talks directly to the web server (DST). Used in IPv4 and IPv6.</div>
+    </div>
+    <div class="dlv-vis" id="dv-multi">
+      <div class="node-row">
+        <div class="node src">SRC</div>
+        <span class="arrow">→</span>
+        <div class="node dst">G1</div>
+        <div class="node dst">G2</div>
+        <div class="node off">C</div>
+        <div class="node off">D</div>
+      </div>
+      <div class="ex c" style="margin-top:6px">Example: Video streaming to subscribed users — only group members receive it. Used in IPv4 and IPv6.</div>
+    </div>
+    <div class="dlv-vis" id="dv-broad">
+      <div class="node-row">
+        <div class="node src">SRC</div>
+        <span class="arrow">→</span>
+        <div class="node dst">ALL</div>
+        <div class="node dst">ALL</div>
+        <div class="node dst">ALL</div>
+        <div class="node dst">ALL</div>
+      </div>
+      <div class="ex o" style="margin-top:6px">Example: ARP request — sent to all devices on the LAN. ⚠️ IPv4 only — IPv6 does NOT use broadcast!</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 1: PROTOCOLS ===== -->
+<div class="sec" id="s1">
+  <div class="sh">
+    <div class="si" style="background:rgba(6,182,212,.12)">🔌</div>
+    <div><h1>Protocols</h1><p>Section 3.2 — Types, functions, and how they interact</p></div>
+  </div>
+
+  <div class="card">
+    <span class="tag tc">3.2.1 Protocol Types — Click to explore</span>
+    <div class="proto-grid" id="protoGrid">
+      <div class="pc" onclick="togglePC(this)">
+        <div class="pc-type" style="color:var(--a1)">Network Comms</div>
+        <div class="pc-name">IP, TCP, HTTP</div>
+        <div class="pc-desc">Enable two or more devices to communicate over one or more networks. The core of all internet communication.</div>
+      </div>
+      <div class="pc" onclick="togglePC(this)">
+        <div class="pc-type" style="color:var(--a5)">Network Security</div>
+        <div class="pc-name">SSH, TLS, SSL</div>
+        <div class="pc-desc">Secure data — provide authentication, data integrity, and encryption. Protect data in transit from eavesdropping.</div>
+      </div>
+      <div class="pc" onclick="togglePC(this)">
+        <div class="pc-type" style="color:var(--a3)">Routing</div>
+        <div class="pc-name">RIP, OSPF, BGP</div>
+        <div class="pc-desc">Enable routers to exchange route information, compare path info, and select the best path to any destination.</div>
+      </div>
+      <div class="pc" onclick="togglePC(this)">
+        <div class="pc-type" style="color:var(--a4)">Service Discovery</div>
+        <div class="pc-name">DHCP, DNS</div>
+        <div class="pc-desc">Automatic detection of devices or services. DHCP assigns IP addresses; DNS resolves domain names to IPs.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <span class="tag tv">3.2.2 Protocol Functions</span>
+    <table class="tbl">
+      <tr><th>Function</th><th>Description</th><th>Example</th></tr>
+      <tr><td><strong>Addressing</strong></td><td>Identifies sender and receiver</td><td><code>IPv4</code>, <code>IPv6</code>, <code>Ethernet</code></td></tr>
+      <tr><td><strong>Reliability</strong></td><td>Guaranteed delivery</td><td><code>TCP</code> with ACKs</td></tr>
+      <tr><td><strong>Flow Control</strong></td><td>Efficient data rate</td><td><code>TCP</code> sliding window</td></tr>
+      <tr><td><strong>Sequencing</strong></td><td>Labels each data segment</td><td><code>TCP</code> segment numbering</td></tr>
+      <tr><td><strong>Error Detection</strong></td><td>Detects corrupted data</td><td><code>CRC</code> in IPv4</td></tr>
+      <tr><td><strong>App Interface</strong></td><td>Process-to-process comms</td><td><code>HTTP</code> client↔server</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <span class="tag to">3.2.3 Protocol Interaction — When you visit a website</span>
+    <h3>Multiple protocols work together:</h3>
+    <div style="display:flex;flex-direction:column;gap:8px;margin-top:14px">
+      <div style="display:flex;align-items:flex-start;gap:12px;padding:13px 16px;background:var(--bg3);border-radius:10px;border-right:3px solid var(--a6)">
+        <code style="font-size:13px;padding:4px 10px;white-space:nowrap">HTTP</code>
+        <div><div style="font-size:13px;font-weight:600;margin-bottom:3px">Application Layer</div><div style="font-size:12px;color:var(--t2)">Governs how browser and web server interact — defines content and format of web pages</div></div>
+      </div>
+      <div style="display:flex;align-items:flex-start;gap:12px;padding:13px 16px;background:var(--bg3);border-radius:10px;border-right:3px solid var(--a1)">
+        <code style="font-size:13px;padding:4px 10px;white-space:nowrap">TCP</code>
+        <div><div style="font-size:13px;font-weight:600;margin-bottom:3px">Transport Layer</div><div style="font-size:12px;color:var(--t2)">Manages conversations, provides guaranteed delivery, manages flow control</div></div>
+      </div>
+      <div style="display:flex;align-items:flex-start;gap:12px;padding:13px 16px;background:var(--bg3);border-radius:10px;border-right:3px solid var(--a2)">
+        <code style="font-size:13px;padding:4px 10px;white-space:nowrap">IP</code>
+        <div><div style="font-size:13px;font-weight:600;margin-bottom:3px">Internet Layer</div><div style="font-size:12px;color:var(--t2)">Delivers messages globally from sender to receiver using IP addresses</div></div>
+      </div>
+      <div style="display:flex;align-items:flex-start;gap:12px;padding:13px 16px;background:var(--bg3);border-radius:10px;border-right:3px solid var(--a4)">
+        <code style="font-size:13px;padding:4px 10px;white-space:nowrap">Ethernet</code>
+        <div><div style="font-size:13px;font-weight:600;margin-bottom:3px">Network Access Layer</div><div style="font-size:12px;color:var(--t2)">Delivers messages from one NIC to another on the same LAN using MAC addresses</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 2: PROTOCOL SUITES ===== -->
+<div class="sec" id="s2">
+  <div class="sh">
+    <div class="si" style="background:rgba(245,158,11,.12)">📦</div>
+    <div><h1>Protocol Suites</h1><p>Section 3.3 — Groups of protocols that work together</p></div>
+  </div>
+
+  <div class="card">
+    <span class="tag to">3.3.1 What is a Protocol Suite?</span>
+    <h3>A group of inter-related protocols that together perform a communication function.</h3>
+    <div class="alert ai" style="margin-top:12px"><span>🔗</span><span>Think of it as a team — each protocol has a specific role, and they all work together to get data from A to B</span></div>
+    <div class="g2" style="margin-top:14px">
+      <div class="ex">Upper Layers:<br>Handle user-facing services<br>(HTTP, DNS, DHCP, FTP)</div>
+      <div class="ex c">Lower Layers:<br>Move data across the network<br>(IP, TCP, Ethernet)</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <span class="tag tc">3.3.2 Protocol Suite History — Click to learn</span>
+    <div style="display:flex;flex-direction:column;gap:8px;margin-top:12px" id="suiteCards">
+      <div style="padding:14px 18px;background:var(--bg3);border-radius:10px;border:1px solid rgba(16,185,129,.3);cursor:pointer" onclick="toggleSuite(this)">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <div><span style="color:var(--a4);font-weight:700;font-size:14px">TCP/IP</span> <span style="font-size:11px;color:var(--t3);font-family:'JetBrains Mono',monospace">Internet Protocol Suite</span></div>
+          <span style="color:var(--t3);font-size:12px">▼</span>
+        </div>
+        <div class="suite-body" style="display:none;margin-top:10px;font-size:13px;color:var(--t2);line-height:1.7">Most common protocol suite. Maintained by <strong>IETF</strong> (Internet Engineering Task Force). Open standard — free for anyone to use. Powers the entire internet.</div>
+      </div>
+      <div style="padding:14px 18px;background:var(--bg3);border-radius:10px;border:1px solid rgba(6,182,212,.3);cursor:pointer" onclick="toggleSuite(this)">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <div><span style="color:var(--a2);font-weight:700;font-size:14px">OSI</span> <span style="font-size:11px;color:var(--t3);font-family:'JetBrains Mono',monospace">Open Systems Interconnection</span></div>
+          <span style="color:var(--t3);font-size:12px">▼</span>
+        </div>
+        <div class="suite-body" style="display:none;margin-top:10px;font-size:13px;color:var(--t2);line-height:1.7">Developed by <strong>ISO</strong> and <strong>ITU</strong>. A reference model — not a protocol itself, but a framework that helps us understand and describe network communication in 7 layers.</div>
+      </div>
+      <div style="padding:14px 18px;background:var(--bg3);border-radius:10px;border:1px solid var(--border);cursor:pointer;opacity:.7" onclick="toggleSuite(this)">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <div><span style="color:var(--t2);font-weight:700;font-size:14px">AppleTalk</span> <span style="font-size:11px;color:var(--t3);font-family:'JetBrains Mono',monospace">Legacy</span></div>
+          <span style="color:var(--t3);font-size:12px">▼</span>
+        </div>
+        <div class="suite-body" style="display:none;margin-top:10px;font-size:13px;color:var(--t2);line-height:1.7">Proprietary suite released by Apple Inc. Discontinued — Apple devices now use TCP/IP.</div>
+      </div>
+      <div style="padding:14px 18px;background:var(--bg3);border-radius:10px;border:1px solid var(--border);cursor:pointer;opacity:.7" onclick="toggleSuite(this)">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <div><span style="color:var(--t2);font-weight:700;font-size:14px">Novell NetWare</span> <span style="font-size:11px;color:var(--t3);font-family:'JetBrains Mono',monospace">Legacy</span></div>
+          <span style="color:var(--t3);font-size:12px">▼</span>
+        </div>
+        <div class="suite-body" style="display:none;margin-top:10px;font-size:13px;color:var(--t2);line-height:1.7">Proprietary suite by Novell Inc. Discontinued — replaced by TCP/IP in enterprise environments.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <span class="tag tg">Why TCP/IP Won</span>
+    <div class="g2" style="margin-top:10px">
+      <div class="alert ag"><span>✅</span><span><strong>Open standard</strong> — free, no vendor lock-in</span></div>
+      <div class="alert ag"><span>🌐</span><span><strong>Standards-based</strong> — endorsed by the networking industry</span></div>
+      <div class="alert ag"><span>🔄</span><span><strong>Interoperable</strong> — any device from any vendor can use it</span></div>
+      <div class="alert ag"><span>🏛️</span><span>Approved by <strong>standards organizations</strong></span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 3: OSI MODEL ===== -->
+<div class="sec" id="s3">
+  <div class="sh">
+    <div class="si" style="background:rgba(232,121,249,.12)">🏛️</div>
+    <div><h1>OSI Reference Model</h1><p>Section 3.5 — The 7-layer model — click each layer to explore</p></div>
+  </div>
+
+  <div class="card">
+    <span class="tag tp">Benefits of a Layered Model</span>
+    <div class="g2" style="margin-top:10px">
+      <div class="ex">Assists <strong>protocol design</strong> — each layer has defined input/output</div>
+      <div class="ex c">Fosters <strong>competition</strong> — different vendors interoperate</div>
+      <div class="ex g">Prevents changes in one layer from <strong>affecting others</strong></div>
+      <div class="ex o">Provides a <strong>common language</strong> for networking</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <span class="tag tp">3.5.2 OSI Layers — Click any layer</span>
+    <div class="osi-wrap" id="osiWrap">
+      <div class="osi-layer" style="background:rgba(232,121,249,.08)" onclick="toggleOSI(this,7)">
+        <div class="osi-num" style="background:rgba(232,121,249,.15);color:var(--a6)">7</div>
+        <div class="osi-name">Application</div>
+        <div class="osi-pdu">DATA</div>
+        <div class="osi-detail" style="background:rgba(232,121,249,.05)">Process-to-process communications. Protocols: <code>HTTP</code>, <code>FTP</code>, <code>DNS</code>, <code>DHCP</code>, <code>SMTP</code>. This is the layer your apps interact with.</div>
+      </div>
+      <div class="osi-layer" style="background:rgba(244,63,94,.08)" onclick="toggleOSI(this,6)">
+        <div class="osi-num" style="background:rgba(244,63,94,.15);color:var(--a5)">6</div>
+        <div class="osi-name">Presentation</div>
+        <div class="osi-pdu">DATA</div>
+        <div class="osi-detail" style="background:rgba(244,63,94,.05)">Common representation of data transferred between app layer services. Handles <strong>encryption</strong>, <strong>encoding</strong>, and <strong>compression</strong>. Example: TLS/SSL.</div>
+      </div>
+      <div class="osi-layer" style="background:rgba(245,158,11,.08)" onclick="toggleOSI(this,5)">
+        <div class="osi-num" style="background:rgba(245,158,11,.15);color:var(--a3)">5</div>
+        <div class="osi-name">Session</div>
+        <div class="osi-pdu">DATA</div>
+        <div class="osi-detail" style="background:rgba(245,158,11,.05)">Manages sessions — setup, maintenance, and teardown of conversations. Manages Unicast, Multicast, Broadcast addressing at the application level.</div>
+      </div>
+      <div class="osi-layer" style="background:rgba(16,185,129,.08)" onclick="toggleOSI(this,4)">
+        <div class="osi-num" style="background:rgba(16,185,129,.15);color:var(--a4)">4</div>
+        <div class="osi-name">Transport</div>
+        <div class="osi-pdu">SEGMENT</div>
+        <div class="osi-detail" style="background:rgba(16,185,129,.05)">Segments, transfers, and reassembles data. Uses <strong>port numbers</strong>. Protocols: <code>TCP</code> (reliable) and <code>UDP</code> (fast, no guarantee). PDU = Segment.</div>
+      </div>
+      <div class="osi-layer" style="background:rgba(6,182,212,.08)" onclick="toggleOSI(this,3)">
+        <div class="osi-num" style="background:rgba(6,182,212,.15);color:var(--a2)">3</div>
+        <div class="osi-name">Network</div>
+        <div class="osi-pdu">PACKET</div>
+        <div class="osi-detail" style="background:rgba(6,182,212,.05)">Routes data between networks. Uses <strong>IP addresses</strong>. Protocol: <code>IP</code> (IPv4/IPv6). PDU = Packet. Routers operate at this layer.</div>
+      </div>
+      <div class="osi-layer" style="background:rgba(139,92,246,.08)" onclick="toggleOSI(this,2)">
+        <div class="osi-num" style="background:rgba(139,92,246,.15);color:var(--a1)">2</div>
+        <div class="osi-name">Data Link</div>
+        <div class="osi-pdu">FRAME</div>
+        <div class="osi-detail" style="background:rgba(139,92,246,.05)">Exchanges data frames over common media. Uses <strong>MAC addresses</strong>. Protocols: <code>Ethernet</code>, <code>Wi-Fi</code>. PDU = Frame. Switches operate here.</div>
+      </div>
+      <div class="osi-layer" style="background:rgba(75,85,99,.2)" onclick="toggleOSI(this,1)">
+        <div class="osi-num" style="background:rgba(75,85,99,.3);color:var(--t2)">1</div>
+        <div class="osi-name">Physical</div>
+        <div class="osi-pdu">BITS</div>
+        <div class="osi-detail" style="background:rgba(75,85,99,.1)">Physical connections — cables, signals, NIC cards. Defines type of media (copper, fiber, wireless). PDU = Bits. This is Module 4!</div>
+      </div>
+    </div>
+    <div class="alert ai" style="margin-top:14px"><span>💡</span><span>Memory trick: <strong>"All People Seem To Need Data Processing"</strong> (Application → Physical top to bottom)</span></div>
+  </div>
+</div>
+
+<!-- ===== 4: TCP/IP MODEL ===== -->
+<div class="sec" id="s4">
+  <div class="sh">
+    <div class="si" style="background:rgba(6,182,212,.12)">🔄</div>
+    <div><h1>TCP/IP Model</h1><p>Section 3.5 — The 4-layer model used by the internet</p></div>
+  </div>
+
+  <div class="card">
+    <span class="tag tc">TCP/IP Layers — Click each layer</span>
+    <div class="tcpip-layers" id="tcpipLayers">
+
+      <div class="tl" onclick="toggleTL(this)" style="background:rgba(232,121,249,.06)">
+        <div class="tl-num">4</div>
+        <div class="tl-name" style="color:var(--a6)">Application</div>
+        <div class="tl-protos">
+          <span class="proto-badge" style="background:rgba(232,121,249,.1);color:var(--a6)">HTTP</span>
+          <span class="proto-badge" style="background:rgba(232,121,249,.1);color:var(--a6)">DNS</span>
+          <span class="proto-badge" style="background:rgba(232,121,249,.1);color:var(--a6)">DHCP</span>
+          <span class="proto-badge" style="background:rgba(232,121,249,.1);color:var(--a6)">FTP</span>
+          <span class="proto-badge" style="background:rgba(232,121,249,.1);color:var(--a6)">SMTP</span>
+        </div>
+      </div>
+      <div class="tl-detail" id="tld-0">Represents data to the user, encoding, and dialog control. Maps to OSI layers 5, 6, and 7. This is where your apps (browser, email, etc.) communicate with the network.</div>
+
+      <div class="tl" onclick="toggleTL(this)" style="background:rgba(16,185,129,.06)">
+        <div class="tl-num">3</div>
+        <div class="tl-name" style="color:var(--a4)">Transport</div>
+        <div class="tl-protos">
+          <span class="proto-badge" style="background:rgba(16,185,129,.1);color:var(--a4)">TCP</span>
+          <span class="proto-badge" style="background:rgba(16,185,129,.1);color:var(--a4)">UDP</span>
+        </div>
+      </div>
+      <div class="tl-detail" id="tld-1">Supports communication between devices across diverse networks. <strong>TCP</strong> = reliable, ordered delivery. <strong>UDP</strong> = fast, no guarantee. Maps to OSI layer 4.</div>
+
+      <div class="tl" onclick="toggleTL(this)" style="background:rgba(6,182,212,.06)">
+        <div class="tl-num">2</div>
+        <div class="tl-name" style="color:var(--a2)">Internet</div>
+        <div class="tl-protos">
+          <span class="proto-badge" style="background:rgba(6,182,212,.1);color:var(--a2)">IPv4</span>
+          <span class="proto-badge" style="background:rgba(6,182,212,.1);color:var(--a2)">IPv6</span>
+          <span class="proto-badge" style="background:rgba(6,182,212,.1);color:var(--a2)">ICMP</span>
+        </div>
+      </div>
+      <div class="tl-detail" id="tld-2">Determines the best path through the network using <strong>IP addresses</strong>. Routes packets between different networks (LANs, WANs). Maps to OSI layer 3.</div>
+
+      <div class="tl" onclick="toggleTL(this)" style="background:rgba(139,92,246,.06)">
+        <div class="tl-num">1</div>
+        <div class="tl-name" style="color:var(--a1)">Network Access</div>
+        <div class="tl-protos">
+          <span class="proto-badge" style="background:rgba(139,92,246,.1);color:var(--a1)">Ethernet</span>
+          <span class="proto-badge" style="background:rgba(139,92,246,.1);color:var(--a1)">Wi-Fi</span>
+          <span class="proto-badge" style="background:rgba(139,92,246,.1);color:var(--a1)">ARP</span>
+        </div>
+      </div>
+      <div class="tl-detail" id="tld-3">Controls hardware devices and media. Uses <strong>MAC addresses</strong>. Covers both the physical connection (cables, signals) and the data link (frames). Maps to OSI layers 1 and 2.</div>
+
+    </div>
+  </div>
+
+  <div class="card">
+    <span class="tag tp">OSI vs TCP/IP Comparison</span>
+    <div class="g2" style="margin-top:14px">
+      <div>
+        <div style="font-size:13px;font-weight:700;color:var(--a6);margin-bottom:10px;font-family:'JetBrains Mono',monospace">OSI (7 layers)</div>
+        <div style="display:flex;flex-direction:column;gap:4px;font-size:12px">
+          <div style="padding:7px 12px;border-radius:6px;background:rgba(232,121,249,.08);border:1px solid rgba(232,121,249,.2);color:var(--a6)">7 — Application</div>
+          <div style="padding:7px 12px;border-radius:6px;background:rgba(244,63,94,.08);border:1px solid rgba(244,63,94,.2);color:var(--a5)">6 — Presentation</div>
+          <div style="padding:7px 12px;border-radius:6px;background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.2);color:var(--a3)">5 — Session</div>
+          <div style="padding:7px 12px;border-radius:6px;background:rgba(16,185,129,.08);border:1px solid rgba(16,185,129,.2);color:var(--a4)">4 — Transport</div>
+          <div style="padding:7px 12px;border-radius:6px;background:rgba(6,182,212,.08);border:1px solid rgba(6,182,212,.2);color:var(--a2)">3 — Network</div>
+          <div style="padding:7px 12px;border-radius:6px;background:rgba(139,92,246,.08);border:1px solid rgba(139,92,246,.2);color:var(--a1)">2 — Data Link</div>
+          <div style="padding:7px 12px;border-radius:6px;background:rgba(75,85,99,.15);border:1px solid rgba(75,85,99,.3);color:var(--t2)">1 — Physical</div>
+        </div>
+      </div>
+      <div>
+        <div style="font-size:13px;font-weight:700;color:var(--a2);margin-bottom:10px;font-family:'JetBrains Mono',monospace">TCP/IP (4 layers)</div>
+        <div style="display:flex;flex-direction:column;gap:4px;font-size:12px">
+          <div style="padding:21px 12px;border-radius:6px;background:rgba(232,121,249,.08);border:1px solid rgba(232,121,249,.2);color:var(--a6)">4 — Application<br><span style="font-size:10px;color:var(--t3)">(covers OSI 5,6,7)</span></div>
+          <div style="padding:7px 12px;border-radius:6px;background:rgba(16,185,129,.08);border:1px solid rgba(16,185,129,.2);color:var(--a4)">3 — Transport</div>
+          <div style="padding:7px 12px;border-radius:6px;background:rgba(6,182,212,.08);border:1px solid rgba(6,182,212,.2);color:var(--a2)">2 — Internet</div>
+          <div style="padding:21px 12px;border-radius:6px;background:rgba(139,92,246,.08);border:1px solid rgba(139,92,246,.2);color:var(--a1)">1 — Network Access<br><span style="font-size:10px;color:var(--t3)">(covers OSI 1,2)</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="alert ao" style="margin-top:14px"><span>⚠️</span><span>Key difference: TCP/IP combines OSI layers 1&2 into "Network Access" and OSI layers 5,6,7 into "Application"</span></div>
+  </div>
+</div>
+
+<!-- ===== 5: ENCAPSULATION ===== -->
+<div class="sec" id="s5">
+  <div class="sh">
+    <div class="si" style="background:rgba(16,185,129,.12)">📬</div>
+    <div><h1>Data Encapsulation</h1><p>Section 3.6 — How data is packaged as it travels down the layers</p></div>
+  </div>
+
+  <div class="card">
+    <span class="tag tg">The Big Idea</span>
+    <h3>Each layer adds its own header (and sometimes trailer) to the data from the layer above — like putting a letter into envelopes.</h3>
+    <div class="alert ai" style="margin-top:12px"><span>📮</span><span>Think of it as a letter: the message → put in an envelope (TCP) → put in a box with address (IP) → put on a truck with a route (Ethernet)</span></div>
+  </div>
+
+  <!-- PDU STEPPER -->
+  <div class="card">
+    <span class="tag tg">Interactive — PDU at Each Layer</span>
+    <h3>Protocol Data Units (PDUs) — click a step:</h3>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin:14px 0" id="pdu-btns">
+      <button class="ts-btn on" onclick="showPDU(0,this)">Step 1: App Data</button>
+      <button class="ts-btn" onclick="showPDU(1,this)">Step 2: Segment</button>
+      <button class="ts-btn" onclick="showPDU(2,this)">Step 3: Packet</button>
+      <button class="ts-btn" onclick="showPDU(3,this)">Step 4: Frame</button>
+      <button class="ts-btn" onclick="showPDU(4,this)">Step 5: Bits</button>
+    </div>
+    <div class="pdu-visual" id="pduVis"></div>
+    <div id="pdu-desc" class="ex" style="margin-top:12px"></div>
+  </div>
+
+  <div class="card">
+    <span class="tag tc">Encapsulation vs De-encapsulation</span>
+    <div class="g2" style="margin-top:12px">
+      <div>
+        <div style="font-size:13px;font-weight:700;color:var(--a4);margin-bottom:10px">📤 Encapsulation (Sender)</div>
+        <div class="enc-steps">
+          <div class="enc-step">
+            <div class="enc-num" style="background:rgba(232,121,249,.12);color:var(--a6)">7→5</div>
+            <div class="enc-body"><h4>Application → Session</h4><p>User data created (e.g. HTTP request)</p></div>
+          </div>
+          <div class="enc-step">
+            <div class="enc-num" style="background:rgba(16,185,129,.12);color:var(--a4)">4</div>
+            <div class="enc-body"><h4>Transport adds header</h4><p>TCP/UDP header added → becomes <strong>Segment</strong></p></div>
+          </div>
+          <div class="enc-step">
+            <div class="enc-num" style="background:rgba(6,182,212,.12);color:var(--a2)">3</div>
+            <div class="enc-body"><h4>Network adds header</h4><p>IP header (src/dst IP) added → becomes <strong>Packet</strong></p></div>
+          </div>
+          <div class="enc-step">
+            <div class="enc-num" style="background:rgba(139,92,246,.12);color:var(--a1)">2</div>
+            <div class="enc-body"><h4>Data Link adds header+trailer</h4><p>MAC addresses added → becomes <strong>Frame</strong></p></div>
+          </div>
+          <div class="enc-step">
+            <div class="enc-num" style="background:rgba(75,85,99,.2);color:var(--t2)">1</div>
+            <div class="enc-body"><h4>Physical converts to bits</h4><p>Frame converted to signal → <strong>Bits</strong> transmitted</p></div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div style="font-size:13px;font-weight:700;color:var(--a5);margin-bottom:10px">📥 De-encapsulation (Receiver)</div>
+        <div class="enc-steps">
+          <div class="enc-step">
+            <div class="enc-num" style="background:rgba(75,85,99,.2);color:var(--t2)">1</div>
+            <div class="enc-body"><h4>Physical receives bits</h4><p>Signals decoded into bits → Frame rebuilt</p></div>
+          </div>
+          <div class="enc-step">
+            <div class="enc-num" style="background:rgba(139,92,246,.12);color:var(--a1)">2</div>
+            <div class="enc-body"><h4>Data Link reads frame</h4><p>Checks MAC address → strips header/trailer</p></div>
+          </div>
+          <div class="enc-step">
+            <div class="enc-num" style="background:rgba(6,182,212,.12);color:var(--a2)">3</div>
+            <div class="enc-body"><h4>Network reads packet</h4><p>Checks IP address → strips IP header</p></div>
+          </div>
+          <div class="enc-step">
+            <div class="enc-num" style="background:rgba(16,185,129,.12);color:var(--a4)">4</div>
+            <div class="enc-body"><h4>Transport reads segment</h4><p>Reassembles data → strips TCP header</p></div>
+          </div>
+          <div class="enc-step">
+            <div class="enc-num" style="background:rgba(232,121,249,.12);color:var(--a6)">7→5</div>
+            <div class="enc-body"><h4>Application receives data</h4><p>User sees the webpage/message 🎉</p></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 6: QUIZ ===== -->
+<div class="sec" id="s6">
+  <div class="sh">
+    <div class="si" style="background:rgba(16,185,129,.12)">✅</div>
+    <div><h1>Test Yourself</h1><p>10 questions covering all of Module 3</p></div>
+  </div>
+  <div class="pbw">
+    <div class="pb"><div class="pbf" id="qpb" style="width:0%"></div></div>
+    <div class="pt" id="qpt">0 / 10</div>
+  </div>
+  <div id="qqs"></div>
+  <div class="qscore" id="qsc">
+    <div class="sc-big" id="qbig"></div>
+    <div class="sc-sub">correct answers out of 10</div>
+    <div class="sc-msg" id="qmsg" style="margin-bottom:20px"></div>
+    <button class="btn btn-o" onclick="resetQ()">🔄 Try Again</button>
+  </div>
+</div>
+
+</div><!-- /main -->
+
+<div class="sdots" id="sdots"></div>
+
+<script>
+// ===== NAV =====
+const secs=['s0','s1','s2','s3','s4','s5','s6'];
+function go(n){
+  secs.forEach((s,i)=>{
+    document.getElementById(s).classList.toggle('on',i===n);
+    document.querySelectorAll('.nb')[i].classList.toggle('on',i===n);
+    document.querySelectorAll('.sd')[i].classList.toggle('on',i===n);
+  });
+  window.scrollTo({top:0,behavior:'smooth'});
+  if(n===6)buildQ();
+}
+const sd=document.getElementById('sdots');
+secs.forEach((_,i)=>{
+  const d=document.createElement('div');
+  d.className='sd'+(i===0?' on':'');
+  d.onclick=()=>go(i);
+  sd.appendChild(d);
+});
+
+// ===== DELIVERY TOGGLE =====
+function showDlv(type,btn){
+  document.querySelectorAll('.dlv-btn').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+  ['uni','multi','broad'].forEach(t=>{
+    const el=document.getElementById('dv-'+t);
+    if(el)el.classList.toggle('on',t===type);
+  });
+}
+
+// ===== TIMING TOGGLE =====
+function showTS(id,btn){
+  document.querySelectorAll('.ts-btn').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+  ['fc','rt','am','col'].forEach(t=>{
+    const el=document.getElementById('ts-'+t);
+    if(el)el.classList.toggle('on',t===id);
+  });
+}
+
+// ===== PROTOCOL CARDS =====
+function togglePC(el){
+  const wasOn=el.classList.contains('on');
+  document.querySelectorAll('.pc').forEach(p=>p.classList.remove('on'));
+  if(!wasOn)el.classList.add('on');
+}
+
+// ===== SUITE ACCORDION =====
+function toggleSuite(el){
+  const body=el.querySelector('.suite-body');
+  const wasVisible=body.style.display==='block';
+  document.querySelectorAll('.suite-body').forEach(b=>b.style.display='none');
+  if(!wasVisible)body.style.display='block';
+}
+
+// ===== OSI LAYERS =====
+function toggleOSI(el){
+  const wasOn=el.classList.contains('on');
+  document.querySelectorAll('.osi-layer').forEach(l=>l.classList.remove('on'));
+  if(!wasOn)el.classList.add('on');
+}
+
+// ===== TCP/IP LAYERS =====
+function toggleTL(el){
+  const wasOn=el.classList.contains('on');
+  document.querySelectorAll('.tl').forEach(l=>l.classList.remove('on'));
+  document.querySelectorAll('.tl-detail').forEach(d=>d.style.display='none');
+  if(!wasOn){
+    el.classList.add('on');
+    const next=el.nextElementSibling;
+    if(next&&next.classList.contains('tl-detail'))next.style.display='block';
+  }
+}
+
+// ===== PDU STEPPER =====
+const pduSteps=[
+  {
+    label:'Application Data — Layer 7',
+    rows:[
+      {lbl:'Layer 7',cells:[{text:'HTTP DATA (web page request)',bg:'rgba(232,121,249,.15)',col:'var(--a6)',full:true}]}
+    ],
+    desc:'The application creates raw data — e.g. an HTTP request to get a web page. No headers added yet. This is called DATA at the application layer.'
+  },
+  {
+    label:'Segment — Layer 4 (Transport)',
+    rows:[
+      {lbl:'Layer 4',cells:[{text:'TCP Header',bg:'rgba(16,185,129,.2)',col:'var(--a4)'},{text:'HTTP DATA',bg:'rgba(232,121,249,.1)',col:'var(--a6)',full:true}]}
+    ],
+    desc:'Transport Layer (TCP) adds a header with port numbers, sequence number, and ACK info. The result is called a SEGMENT.'
+  },
+  {
+    label:'Packet — Layer 3 (Network)',
+    rows:[
+      {lbl:'Layer 3',cells:[{text:'IP Header',bg:'rgba(6,182,212,.2)',col:'var(--a2)'},{text:'TCP Hdr',bg:'rgba(16,185,129,.15)',col:'var(--a4)'},{text:'HTTP DATA',bg:'rgba(232,121,249,.1)',col:'var(--a6)',full:true}]}
+    ],
+    desc:'Network Layer (IP) adds a header with source and destination IP addresses. The result is called a PACKET. Routers read this layer.'
+  },
+  {
+    label:'Frame — Layer 2 (Data Link)',
+    rows:[
+      {lbl:'Layer 2',cells:[{text:'ETH Hdr',bg:'rgba(139,92,246,.2)',col:'var(--a1)'},{text:'IP Hdr',bg:'rgba(6,182,212,.15)',col:'var(--a2)'},{text:'TCP Hdr',bg:'rgba(16,185,129,.12)',col:'var(--a4)'},{text:'DATA',bg:'rgba(232,121,249,.08)',col:'var(--a6)',full:true},{text:'ETH Trl',bg:'rgba(139,92,246,.2)',col:'var(--a1)'}]}
+    ],
+    desc:'Data Link Layer (Ethernet) adds a header (MAC addresses) AND a trailer (FCS for error checking). The result is called a FRAME. Switches read this layer.'
+  },
+  {
+    label:'Bits — Layer 1 (Physical)',
+    rows:[
+      {lbl:'Layer 1',cells:[{text:'10110100 11001010 10101101 ... (binary signals)',bg:'rgba(75,85,99,.2)',col:'var(--t2)',full:true}]}
+    ],
+    desc:'Physical Layer converts the frame into a stream of BITS — electrical signals, light pulses, or radio waves depending on the media. This is what actually travels on the cable or through the air.'
+  }
+];
+
+function showPDU(idx,btn){
+  document.querySelectorAll('#pdu-btns .ts-btn').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+  const step=pduSteps[idx];
+  const vis=document.getElementById('pduVis');
+  vis.innerHTML=step.rows.map(row=>`
+    <div class="pdu-row">
+      <div class="pdu-lbl">${row.lbl}</div>
+      ${row.cells.map(c=>`<div class="pdu-hdr" style="background:${c.bg};color:${c.col};border:1px solid ${c.col}40;${c.full?'flex:1':''}">
+        ${c.text}
+      </div>`).join('')}
+    </div>
+  `).join('');
+  document.getElementById('pdu-desc').textContent=step.desc;
+}
+showPDU(0,document.querySelector('#pdu-btns .ts-btn'));
+
+// ===== QUIZ =====
+const qs=[
+  {q:'What are the three elements of any communication?',opts:['Protocol, IP, MAC','Source, Channel, Destination','Encoding, Timing, Delivery','Sender, Router, Receiver'],ans:1,exp:'The three elements are: Source (sender), Channel (media), and Destination (receiver).'},
+  {q:'What is a protocol?',opts:['A type of cable','A hardware device','A set of rules governing communication','A routing table'],ans:2,exp:'A protocol is a set of rules that communications will follow — all communications are governed by protocols.'},
+  {q:'Which delivery method sends to ALL devices on the network?',opts:['Unicast','Anycast','Multicast','Broadcast'],ans:3,exp:'Broadcast sends to ALL devices on the network. Used in IPv4 only — not available in IPv6.'},
+  {q:'What does TCP provide that UDP does not?',opts:['Faster speed','Guaranteed delivery (reliability)','IP addressing','Error encoding'],ans:1,exp:'TCP provides guaranteed delivery with acknowledgments (ACKs). UDP is faster but offers no delivery guarantee.'},
+  {q:'Which OSI layer uses IP addresses?',opts:['Layer 1 — Physical','Layer 2 — Data Link','Layer 3 — Network','Layer 4 — Transport'],ans:2,exp:'Layer 3 (Network) uses IP addresses. Routers operate at this layer. The PDU at Layer 3 is called a Packet.'},
+  {q:'What is the PDU at the Transport Layer called?',opts:['Packet','Frame','Segment','Bits'],ans:2,exp:'The PDU at Layer 4 (Transport) is called a Segment. Layer 3 = Packet, Layer 2 = Frame, Layer 1 = Bits.'},
+  {q:'How many layers does the TCP/IP model have?',opts:['3','5','7','4'],ans:3,exp:'The TCP/IP model has 4 layers: Application, Transport, Internet, and Network Access.'},
+  {q:'Which protocol manages flow control and sequencing?',opts:['HTTP','IP','Ethernet','TCP'],ans:3,exp:'TCP manages flow control (sliding window), sequencing (segment numbering), and guaranteed delivery.'},
+  {q:'What is encapsulation?',opts:['Removing headers at each layer','Adding headers at each layer as data moves down','Routing data across networks','Converting bits to signals'],ans:1,exp:'Encapsulation is adding headers (and sometimes trailers) at each layer as data moves down from Application to Physical.'},
+  {q:'Which organization maintains the TCP/IP protocol suite?',opts:['ISO','IEEE','IETF','ITU'],ans:2,exp:'TCP/IP is maintained by the IETF (Internet Engineering Task Force). ISO and ITU developed the OSI model.'},
+];
+let qa=0,qok=0;
+function buildQ(){
+  qa=0;qok=0;updateQP();
+  document.getElementById('qsc').style.display='none';
+  document.getElementById('qqs').innerHTML=qs.map((q,i)=>`
+    <div class="qq" id="qq${i}">
+      <div class="qn">Question ${i+1} / ${qs.length}</div>
+      <div class="qt">${q.q}</div>
+      <div class="opts">${q.opts.map((o,j)=>`<button class="ob" onclick="ansQ(${i},${j})">${o}</button>`).join('')}</div>
+      <div class="qfb" id="qf${i}"></div>
+    </div>`).join('');
+}
+function ansQ(qi,oi){
+  const q=qs[qi],card=document.getElementById('qq'+qi);
+  if(card.classList.contains('lk'))return;
+  card.classList.add('lk');
+  const btns=card.querySelectorAll('.ob');
+  btns[oi].classList.add(oi===q.ans?'ok':'no');
+  if(oi!==q.ans)btns[q.ans].classList.add('ok');
+  const fb=document.getElementById('qf'+qi);
+  fb.style.display='block';
+  fb.className='qfb '+(oi===q.ans?'fb-ok':'fb-no');
+  fb.textContent=(oi===q.ans?'✓ Correct! ':'✗ Wrong — ')+q.exp;
+  if(oi===q.ans)qok++;
+  qa++;updateQP();
+  if(qa===qs.length)setTimeout(showQScore,700);
+}
+function updateQP(){
+  document.getElementById('qpb').style.width=(qa/qs.length*100)+'%';
+  document.getElementById('qpt').textContent=qa+' / '+qs.length;
+}
+function showQScore(){
+  const sc=document.getElementById('qsc');sc.style.display='block';
+  document.getElementById('qbig').textContent=qok+' / '+qs.length;
+  document.getElementById('qmsg').textContent=qok>=9?'🎉 Outstanding! You nailed Module 3!':qok>=7?'👍 Good job! Review a couple of topics.':qok>=5?'📚 Keep studying — you are getting there.':'🔄 Go back through the sections and retry.';
+  sc.scrollIntoView({behavior:'smooth'});
+}
+function resetQ(){buildQ();document.getElementById('qqs').scrollIntoView({behavior:'smooth'});}
+buildQ();
+</script>
+</body>
+</html>
