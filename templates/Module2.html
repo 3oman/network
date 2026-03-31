@@ -1,0 +1,859 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Module 2 — Switch & Device Config</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#04080f;--bg2:#080f1c;--bg3:#0d1626;--card:#091220;
+  --border:rgba(34,197,94,.1);--border2:rgba(34,197,94,.28);
+  --a1:#22c55e;--a2:#38bdf8;--a3:#f59e0b;--a4:#f43f5e;--a5:#a78bfa;--a6:#fb923c;
+  --text:#e2e8f0;--t2:#94a3b8;--t3:#475569;
+  --glow:rgba(34,197,94,.12);--r:14px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:'Plus Jakarta Sans',sans-serif;min-height:100vh;overflow-x:hidden}
+body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(34,197,94,.02) 1px,transparent 1px),linear-gradient(90deg,rgba(34,197,94,.02) 1px,transparent 1px);background-size:44px 44px;pointer-events:none;z-index:0}
+
+/* HERO */
+.hero{position:relative;text-align:center;padding:68px 20px 48px;z-index:1}
+.hero::before{content:'';position:absolute;top:-70px;left:50%;transform:translateX(-50%);width:680px;height:420px;background:radial-gradient(ellipse,rgba(34,197,94,.16) 0%,transparent 65%);pointer-events:none}
+.badge{display:inline-flex;align-items:center;gap:8px;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--a1);border:1px solid var(--border2);background:rgba(34,197,94,.07);padding:7px 18px;border-radius:100px;margin-bottom:20px;animation:up .5s ease both}
+.dot{width:6px;height:6px;border-radius:50%;background:var(--a1);animation:blink 2s infinite}
+.hero h1{font-size:clamp(26px,5.5vw,52px);font-weight:800;line-height:1.1;background:linear-gradient(135deg,#e2e8f0 0%,#22c55e 45%,#38bdf8 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:12px;animation:up .5s .1s ease both}
+.hero p{font-size:15px;color:var(--t2);max-width:500px;margin:0 auto 28px;line-height:1.7;animation:up .5s .2s ease both}
+.chips{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;animation:up .5s .3s ease both}
+.chip{background:var(--card);border:1px solid var(--border);border-radius:100px;padding:7px 16px;font-size:13px;color:var(--t2)}
+.chip strong{color:var(--text)}
+
+/* NAV */
+.nav{position:sticky;top:0;z-index:100;background:rgba(4,8,15,.93);backdrop-filter:blur(18px);border-bottom:1px solid var(--border)}
+.nav-i{display:flex;gap:2px;overflow-x:auto;padding:10px 14px;max-width:1100px;margin:0 auto;scrollbar-width:none}
+.nav-i::-webkit-scrollbar{display:none}
+.nb{flex-shrink:0;padding:8px 15px;border-radius:8px;border:none;background:transparent;color:var(--t2);font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;cursor:pointer;transition:all .2s;white-space:nowrap}
+.nb.on{background:rgba(34,197,94,.12);color:var(--a1)}
+.nb:hover:not(.on){background:rgba(255,255,255,.04);color:var(--text)}
+
+/* MAIN */
+.main{max-width:1100px;margin:0 auto;padding:34px 16px 80px}
+.sec{display:none}.sec.on{display:block;animation:fade .35s ease}
+
+/* CARD */
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:22px;margin-bottom:16px;position:relative;overflow:hidden;transition:border-color .2s,box-shadow .2s}
+.card:hover{border-color:var(--border2);box-shadow:0 0 24px var(--glow)}
+.card::after{content:'';position:absolute;top:0;right:0;width:130px;height:130px;background:radial-gradient(circle at top right,rgba(34,197,94,.04),transparent 65%);pointer-events:none}
+
+/* GRIDS */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+@media(max-width:680px){.g2,.g3{grid-template-columns:1fr}}
+
+/* TAGS */
+.tag{display:inline-block;font-size:10px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;padding:3px 11px;border-radius:100px;margin-bottom:10px}
+.tg{background:rgba(34,197,94,.1);color:var(--a1);border:1px solid rgba(34,197,94,.2)}
+.tb{background:rgba(56,189,248,.1);color:var(--a2);border:1px solid rgba(56,189,248,.2)}
+.to{background:rgba(245,158,11,.1);color:var(--a3);border:1px solid rgba(245,158,11,.2)}
+.tr{background:rgba(244,63,94,.1);color:var(--a4);border:1px solid rgba(244,63,94,.2)}
+.tv{background:rgba(167,139,250,.1);color:var(--a5);border:1px solid rgba(167,139,250,.2)}
+.tx{background:rgba(251,146,60,.1);color:var(--a6);border:1px solid rgba(251,146,60,.2)}
+
+h2{font-size:19px;font-weight:700;margin-bottom:8px}
+h3{font-size:15px;font-weight:600;margin-bottom:8px}
+p,li{font-size:14px;color:var(--t2);line-height:1.75}
+ul{padding-right:18px}li{margin-bottom:5px}
+
+/* CODE TERMINAL */
+.term{background:#020c06;border:1px solid rgba(34,197,94,.2);border-radius:10px;padding:16px;font-family:'JetBrains Mono',monospace;font-size:13px;line-height:1.85;margin:10px 0;position:relative;overflow:hidden}
+.term::before{content:'● ● ●';position:absolute;top:8px;left:12px;font-size:9px;color:var(--t3);letter-spacing:3px}
+.term-inner{margin-top:18px}
+.p{color:#64748b}   /* prompt text */
+.c{color:#22c55e}   /* command */
+.kw{color:#38bdf8}  /* keyword */
+.va{color:#f59e0b}  /* variable/value */
+.cm{color:#475569;font-style:italic}  /* comment */
+.er{color:#f43f5e}  /* error/warning */
+
+code{font-family:'JetBrains Mono',monospace;font-size:12px;background:rgba(34,197,94,.08);color:var(--a1);padding:2px 7px;border-radius:5px;border:1px solid rgba(34,197,94,.15)}
+
+.ex{background:rgba(34,197,94,.04);border-right:3px solid var(--a1);border-radius:0 8px 8px 0;padding:11px 15px;margin:10px 0;font-size:13px;color:var(--t2);line-height:1.7}
+.ex.b{border-color:var(--a2);background:rgba(56,189,248,.04)}
+.ex.o{border-color:var(--a3);background:rgba(245,158,11,.04)}
+.ex.r{border-color:var(--a4);background:rgba(244,63,94,.04)}
+.ex.v{border-color:var(--a5);background:rgba(167,139,250,.04)}
+
+.al{display:flex;gap:10px;padding:11px 15px;border-radius:8px;margin:10px 0;font-size:13px;line-height:1.6}
+.al-g{background:rgba(34,197,94,.07);border:1px solid rgba(34,197,94,.2);color:var(--a1)}
+.al-b{background:rgba(56,189,248,.07);border:1px solid rgba(56,189,248,.2);color:var(--a2)}
+.al-o{background:rgba(245,158,11,.07);border:1px solid rgba(245,158,11,.2);color:var(--a3)}
+.al-r{background:rgba(244,63,94,.07);border:1px solid rgba(244,63,94,.2);color:var(--a4)}
+.al-v{background:rgba(167,139,250,.07);border:1px solid rgba(167,139,250,.2);color:var(--a5)}
+
+.tbl{width:100%;border-collapse:collapse;font-size:13px;margin-top:10px}
+.tbl th{background:rgba(34,197,94,.07);color:var(--a1);font-weight:600;padding:9px 13px;text-align:left;border-bottom:1px solid var(--border2);font-size:11px;letter-spacing:.5px}
+.tbl td{padding:9px 13px;color:var(--t2);border-bottom:1px solid var(--border);line-height:1.6;vertical-align:top}
+.tbl td:first-child{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--a1);white-space:nowrap}
+.tbl tr:last-child td{border-bottom:none}
+.tbl tr:hover td{background:rgba(34,197,94,.02)}
+
+/* SECTION HEADER */
+.sh{display:flex;align-items:center;gap:14px;margin-bottom:22px}
+.si{width:46px;height:46px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:21px;flex-shrink:0}
+
+/* MODE NAVIGATOR INTERACTIVE */
+.mode-map{display:flex;flex-direction:column;gap:6px;margin-top:12px}
+.mode-row{display:flex;align-items:stretch;gap:8px}
+.mode-box{flex:1;padding:14px 16px;border-radius:10px;border:1.5px solid var(--border);background:var(--bg3);cursor:pointer;transition:all .2s;position:relative}
+.mode-box:hover,.mode-box.on{border-color:var(--border2);box-shadow:0 0 16px var(--glow)}
+.mode-box h4{font-size:13px;font-weight:700;margin-bottom:4px}
+.mode-box .prompt{font-family:'JetBrains Mono',monospace;font-size:12px;margin-bottom:6px}
+.mode-box p{font-size:12px;color:var(--t2);line-height:1.6}
+.mode-arrow{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding:0 4px;font-size:11px;color:var(--t3);font-family:'JetBrains Mono',monospace}
+.cmd-badge{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:10px;background:rgba(34,197,94,.1);color:var(--a1);border:1px solid rgba(34,197,94,.2);padding:2px 8px;border-radius:4px;margin-top:5px}
+.mode-detail{display:none;margin-top:10px;padding:12px;background:var(--bg2);border-radius:8px;font-size:13px;color:var(--t2);line-height:1.7;border:1px solid var(--border)}
+.mode-box.on .mode-detail{display:block;animation:fade .25s ease}
+
+/* COMMAND BUILDER INTERACTIVE */
+.cmd-builder{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:18px;margin-top:14px}
+.cb-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.cb-btn{padding:8px 14px;border-radius:8px;border:1px solid var(--border);background:var(--bg3);color:var(--t2);font-family:'JetBrains Mono',monospace;font-size:12px;cursor:pointer;transition:all .2s}
+.cb-btn.on{border-color:var(--a1);color:var(--a1);background:rgba(34,197,94,.08)}
+.cb-btn:hover:not(.on){color:var(--text);border-color:var(--border2)}
+.cb-output{background:#020c06;border:1px solid rgba(34,197,94,.2);border-radius:8px;padding:14px;font-family:'JetBrains Mono',monospace;font-size:13px;line-height:1.9;min-height:80px;transition:all .3s}
+.cb-desc{font-size:13px;color:var(--t2);margin-top:10px;line-height:1.65}
+
+/* PASSWORD STRENGTH */
+.pw-wrap{margin-top:12px}
+.pw-item{display:flex;align-items:center;gap:10px;padding:9px 14px;border-radius:8px;border:1px solid var(--border);background:var(--bg3);margin-bottom:7px;font-size:13px}
+.pw-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+
+/* CONFIG FILES VISUAL */
+.cfg-visual{display:grid;grid-template-columns:1fr auto 1fr;gap:12px;align-items:center;margin-top:14px}
+.cfg-box{padding:16px;border-radius:10px;border:1px solid var(--border);background:var(--bg3);text-align:center}
+.cfg-box h4{font-size:13px;font-weight:700;margin-bottom:6px}
+.cfg-box .mem{font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:8px}
+.cfg-box p{font-size:12px;color:var(--t2);line-height:1.6}
+.cfg-arrow{text-align:center;display:flex;flex-direction:column;gap:4px;align-items:center}
+.cfg-arr{font-size:11px;font-family:'JetBrains Mono',monospace;color:var(--t3)}
+
+/* IP ADDRESS VISUAL */
+.ip-visual{display:flex;gap:4px;align-items:center;margin:14px 0;flex-wrap:wrap}
+.ip-oct{padding:10px 14px;border-radius:8px;border:1px solid var(--border2);background:rgba(34,197,94,.08);font-family:'JetBrains Mono',monospace;font-size:16px;font-weight:700;color:var(--a1);text-align:center;min-width:54px}
+.ip-dot{font-size:20px;color:var(--t3);font-weight:700;padding:0 2px}
+
+/* SHORTCUT GRID */
+.sc-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;margin-top:12px}
+.sc-card{background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:14px;transition:all .2s;cursor:pointer}
+.sc-card:hover{border-color:var(--border2)}
+.sc-key{font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700;color:var(--a1);background:rgba(34,197,94,.08);border:1px solid rgba(34,197,94,.2);padding:4px 10px;border-radius:6px;display:inline-block;margin-bottom:8px}
+.sc-card p{font-size:12px;color:var(--t2);line-height:1.6}
+
+/* QUIZ */
+.pbw{display:flex;align-items:center;gap:10px;margin-bottom:20px}
+.pb{flex:1;height:4px;background:var(--bg3);border-radius:2px;overflow:hidden}
+.pbf{height:100%;background:linear-gradient(90deg,var(--a1),var(--a2));border-radius:2px;transition:width .4s ease}
+.pt{font-size:12px;color:var(--t3);font-family:'JetBrains Mono',monospace;white-space:nowrap}
+.qq{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:20px;margin-bottom:13px}
+.qq.lk{pointer-events:none}
+.qn{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--t3);font-family:'JetBrains Mono',monospace;margin-bottom:9px}
+.qt{font-size:15px;font-weight:600;margin-bottom:14px;line-height:1.5}
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+@media(max-width:500px){.opts{grid-template-columns:1fr}}
+.ob{padding:10px 14px;border-radius:8px;border:1px solid var(--border);background:var(--bg3);color:var(--t2);font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;cursor:pointer;text-align:left;transition:all .2s;line-height:1.5}
+.ob:hover{border-color:var(--border2);color:var(--text)}
+.ob.ok{background:rgba(34,197,94,.09);border-color:rgba(34,197,94,.4);color:var(--a1)}
+.ob.no{background:rgba(244,63,94,.09);border-color:rgba(244,63,94,.4);color:var(--a4)}
+.qfb{font-size:13px;margin-top:11px;padding:10px 14px;border-radius:8px;display:none}
+.fb-ok{background:rgba(34,197,94,.07);color:var(--a1)}
+.fb-no{background:rgba(244,63,94,.07);color:var(--a4)}
+.qsc{text-align:center;padding:40px;background:var(--card);border-radius:var(--r);border:1px solid var(--border);display:none}
+.sc-big{font-size:58px;font-weight:800;color:var(--a1);font-family:'JetBrains Mono',monospace}
+.sc-sub{color:var(--t2);font-size:14px;margin:8px 0 20px}
+.sc-msg{font-size:14px;color:var(--t2);margin-bottom:20px}
+.btn-o{padding:10px 24px;border-radius:8px;border:1px solid var(--border2);background:transparent;color:var(--a1);font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:all .2s}
+.btn-o:hover{background:rgba(34,197,94,.08)}
+
+/* SCROLL DOTS */
+.sdots{display:flex;gap:6px;justify-content:center;padding:12px 0}
+.sd{width:8px;height:8px;border-radius:50%;background:var(--bg3);cursor:pointer;transition:background .2s}
+.sd.on{background:var(--a1)}
+
+@keyframes up{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fade{from{opacity:0}to{opacity:1}}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--bg3);border-radius:3px}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="badge"><span class="dot"></span>Cisco CCNA · ITN v7.0</div>
+  <h1>Module 2<br>Switch & Device Config</h1>
+  <p>Learn how to configure a Cisco switch from scratch — IOS modes, passwords, IP addressing, and saving configs</p>
+  <div class="chips">
+    <div class="chip"><strong>8</strong> Topics</div>
+    <div class="chip"><strong>5</strong> IOS Modes</div>
+    <div class="chip"><strong>CLI</strong> Simulator</div>
+    <div class="chip"><strong>10</strong> Quiz Questions</div>
+  </div>
+</div>
+
+<div class="nav">
+  <div class="nav-i" id="navEl">
+    <button class="nb on" onclick="go(0)">💻 IOS Access</button>
+    <button class="nb" onclick="go(1)">🗺️ Navigation</button>
+    <button class="nb" onclick="go(2)">⌨️ Commands</button>
+    <button class="nb" onclick="go(3)">🔒 Configuration</button>
+    <button class="nb" onclick="go(4)">💾 Save Config</button>
+    <button class="nb" onclick="go(5)">🌐 IP Addressing</button>
+    <button class="nb" onclick="go(6)">🖥️ CLI Simulator</button>
+    <button class="nb" onclick="go(7)">✅ Quiz</button>
+  </div>
+</div>
+
+<div class="main">
+
+<!-- ===== 0: IOS ACCESS ===== -->
+<div class="sec on" id="s0">
+  <div class="sh">
+    <div class="si" style="background:rgba(34,197,94,.12)">💻</div>
+    <div><h1>Cisco IOS Access</h1><p>Section 2.1 — How to connect and access a Cisco device</p></div>
+  </div>
+
+  <div class="g2">
+    <div class="card">
+      <span class="tag tg">Operating System Layers</span>
+      <div style="display:flex;flex-direction:column;gap:8px;margin-top:10px">
+        <div style="padding:12px 14px;border-radius:9px;background:rgba(167,139,250,.08);border:1px solid rgba(167,139,250,.2)">
+          <div style="font-size:13px;font-weight:700;color:var(--a5);margin-bottom:3px">🖥️ Shell</div>
+          <div style="font-size:12px;color:var(--t2)">User interface — CLI or GUI — where you type commands</div>
+        </div>
+        <div style="text-align:center;color:var(--t3);font-size:12px">↕</div>
+        <div style="padding:12px 14px;border-radius:9px;background:rgba(56,189,248,.08);border:1px solid rgba(56,189,248,.2)">
+          <div style="font-size:13px;font-weight:700;color:var(--a2);margin-bottom:3px">⚙️ Kernel</div>
+          <div style="font-size:12px;color:var(--t2)">Communicates between hardware and software</div>
+        </div>
+        <div style="text-align:center;color:var(--t3);font-size:12px">↕</div>
+        <div style="padding:12px 14px;border-radius:9px;background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.2)">
+          <div style="font-size:13px;font-weight:700;color:var(--a3);margin-bottom:3px">🔌 Hardware</div>
+          <div style="font-size:12px;color:var(--t2)">Physical components — CPU, RAM, ports</div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <span class="tag tb">GUI vs CLI</span>
+      <div class="ex b" style="margin-top:10px">
+        <strong>GUI</strong> — Graphical User Interface<br>
+        Icons, menus, windows<br>
+        Examples: Windows, macOS, Android<br>
+        ⚠️ Can crash or fail → not reliable for network devices
+      </div>
+      <div class="ex" style="margin-top:8px">
+        <strong>CLI</strong> — Command Line Interface<br>
+        Text commands via keyboard<br>
+        ✅ Used for ALL Cisco network devices<br>
+        More reliable and powerful
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <span class="tag tg">2.1.4 Access Methods — How to Connect</span>
+    <div class="g3" style="margin-top:12px">
+      <div style="background:var(--bg3);border:1px solid rgba(34,197,94,.25);border-radius:10px;padding:16px">
+        <div style="font-size:22px;margin-bottom:8px">🔌</div>
+        <div style="font-size:14px;font-weight:700;color:var(--a1);margin-bottom:6px">Console</div>
+        <div style="font-size:12px;color:var(--t2);line-height:1.65">Physical port — direct cable connection. Used for initial setup. Works even with no network config.</div>
+        <div class="al-g" style="margin-top:10px;font-size:11px"><span>✅</span><span>Best for first-time setup</span></div>
+      </div>
+      <div style="background:var(--bg3);border:1px solid rgba(56,189,248,.25);border-radius:10px;padding:16px">
+        <div style="font-size:22px;margin-bottom:8px">🔐</div>
+        <div style="font-size:14px;font-weight:700;color:var(--a2);margin-bottom:6px">SSH</div>
+        <div style="font-size:12px;color:var(--t2);line-height:1.65">Secure remote CLI over network. Encrypted — passwords and commands are protected.</div>
+        <div class="al-b" style="margin-top:10px;font-size:11px"><span>⭐</span><span>Recommended for remote access</span></div>
+      </div>
+      <div style="background:var(--bg3);border:1px solid rgba(244,63,94,.25);border-radius:10px;padding:16px">
+        <div style="font-size:22px;margin-bottom:8px">⚠️</div>
+        <div style="font-size:14px;font-weight:700;color:var(--a4);margin-bottom:6px">Telnet</div>
+        <div style="font-size:12px;color:var(--t2);line-height:1.65">Remote CLI over network — but INSECURE. All data (including passwords) sent as plaintext.</div>
+        <div class="al-r" style="margin-top:10px;font-size:11px"><span>❌</span><span>Avoid in production networks</span></div>
+      </div>
+    </div>
+    <div class="al-b" style="margin-top:14px"><span>🖥️</span><span>Terminal emulation programs: <strong>PuTTY</strong>, <strong>Tera Term</strong>, <strong>SecureCRT</strong> — used to connect via Console or SSH/Telnet</span></div>
+  </div>
+</div>
+
+<!-- ===== 1: NAVIGATION ===== -->
+<div class="sec" id="s1">
+  <div class="sh">
+    <div class="si" style="background:rgba(56,189,248,.12)">🗺️</div>
+    <div><h1>IOS Navigation</h1><p>Section 2.2 — Moving between command modes</p></div>
+  </div>
+
+  <div class="card">
+    <span class="tag tb">Interactive — Click a mode to learn more</span>
+    <div class="mode-map" style="margin-top:14px">
+
+      <!-- User EXEC -->
+      <div class="mode-row">
+        <div class="mode-box" onclick="toggleMode(this)" style="border-color:rgba(71,85,105,.4)">
+          <h4 style="color:var(--t2)">User EXEC Mode</h4>
+          <div class="prompt" style="color:var(--t2)">Switch<span style="color:var(--a1)">></span></div>
+          <p>Limited — view only. Like "read-only" access.</p>
+          <div class="mode-detail">
+            Only basic monitoring commands allowed. You CANNOT make any changes here.<br><br>
+            <strong>To enter:</strong> default when you first connect<br>
+            <strong>Common commands:</strong> <code>show version</code>, <code>ping</code><br>
+            <strong>To go up:</strong> type <code class="cmd-badge">enable</code>
+          </div>
+        </div>
+      </div>
+
+      <!-- Arrow up -->
+      <div class="mode-arrow">
+        <span style="color:var(--a1);font-size:14px">↕</span>
+        <span style="color:var(--a1)">enable / disable</span>
+      </div>
+
+      <!-- Priv EXEC -->
+      <div class="mode-row">
+        <div class="mode-box" onclick="toggleMode(this)" style="border-color:rgba(34,197,94,.3)">
+          <h4 style="color:var(--a1)">Privileged EXEC Mode</h4>
+          <div class="prompt" style="color:var(--a1)">Switch<span style="color:var(--a3)">#</span></div>
+          <p>Full access — like "admin" mode. Can view and save config.</p>
+          <div class="mode-detail">
+            Access to ALL commands and features. The <code>#</code> symbol tells you you're here.<br><br>
+            <strong>To enter:</strong> <code class="cmd-badge">enable</code> from User EXEC<br>
+            <strong>To go down:</strong> <code class="cmd-badge">disable</code><br>
+            <strong>To go up to config:</strong> <code class="cmd-badge">configure terminal</code>
+          </div>
+        </div>
+      </div>
+
+      <div class="mode-arrow">
+        <span style="color:var(--a2);font-size:14px">↕</span>
+        <span style="color:var(--a2)">configure terminal / end</span>
+      </div>
+
+      <!-- Global Config -->
+      <div class="mode-row">
+        <div class="mode-box" onclick="toggleMode(this)" style="border-color:rgba(56,189,248,.3)">
+          <h4 style="color:var(--a2)">Global Configuration Mode</h4>
+          <div class="prompt" style="color:var(--a2)">Switch(config)<span style="color:var(--a3)">#</span></div>
+          <p>Make changes that affect the entire device.</p>
+          <div class="mode-detail">
+            All device-wide settings are configured here (hostname, passwords, etc.)<br><br>
+            <strong>To enter:</strong> <code class="cmd-badge">configure terminal</code> from Priv EXEC<br>
+            <strong>To exit to Priv EXEC:</strong> <code class="cmd-badge">exit</code> or <code class="cmd-badge">Ctrl+Z</code><br>
+            <strong>Sub-modes from here:</strong> Line config, Interface config
+          </div>
+        </div>
+      </div>
+
+      <div class="mode-arrow">
+        <span style="color:var(--a5);font-size:14px">↕</span>
+        <span style="color:var(--a5)">line / interface commands</span>
+      </div>
+
+      <!-- Sub config -->
+      <div class="mode-row" style="gap:8px">
+        <div class="mode-box" onclick="toggleMode(this)" style="border-color:rgba(167,139,250,.3)">
+          <h4 style="color:var(--a5)">Line Config Mode</h4>
+          <div class="prompt" style="color:var(--a5)">Switch(config-line)<span style="color:var(--a3)">#</span></div>
+          <p>Configure console, SSH, Telnet access.</p>
+          <div class="mode-detail">
+            <strong>Enter:</strong> <code class="cmd-badge">line console 0</code> or <code class="cmd-badge">line vty 0 15</code><br>
+            <strong>Exit to global:</strong> <code class="cmd-badge">exit</code><br>
+            <strong>Exit to priv:</strong> <code class="cmd-badge">end</code>
+          </div>
+        </div>
+        <div class="mode-box" onclick="toggleMode(this)" style="border-color:rgba(251,146,60,.3)">
+          <h4 style="color:var(--a6)">Interface Config Mode</h4>
+          <div class="prompt" style="color:var(--a6)">Switch(config-if)<span style="color:var(--a3)">#</span></div>
+          <p>Configure switch ports or router interfaces.</p>
+          <div class="mode-detail">
+            <strong>Enter:</strong> <code class="cmd-badge">interface vlan 1</code><br>
+            <strong>Exit to global:</strong> <code class="cmd-badge">exit</code><br>
+            <strong>Exit to priv:</strong> <code class="cmd-badge">end</code> or <code class="cmd-badge">Ctrl+Z</code>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <div class="al-o" style="margin-top:14px"><span>💡</span><span>Quick tip: <code>end</code> or <strong>Ctrl+Z</strong> always jumps you all the way back to Privileged EXEC from any sub-mode</span></div>
+  </div>
+</div>
+
+<!-- ===== 2: COMMANDS ===== -->
+<div class="sec" id="s2">
+  <div class="sh">
+    <div class="si" style="background:rgba(245,158,11,.12)">⌨️</div>
+    <div><h1>Command Structure</h1><p>Section 2.3 — Syntax, help features, and keyboard shortcuts</p></div>
+  </div>
+
+  <div class="card">
+    <span class="tag to">Command Syntax</span>
+    <div class="term" style="margin-top:10px">
+      <div class="term-inner">
+        <span class="c">ping</span> <span class="va">192.168.1.1</span><br>
+        <span class="cm">└─ command  └─ argument (user-defined)</span><br><br>
+        <span class="c">ip address</span> <span class="va">192.168.10.5</span> <span class="va">255.255.255.0</span><br>
+        <span class="cm">└─ keyword   └─ argument          └─ argument</span>
+      </div>
+    </div>
+    <div class="g2" style="margin-top:12px">
+      <div class="ex o"><strong>Keyword</strong> — predefined word the OS recognizes<br>Example: <code>ip</code>, <code>address</code>, <code>ping</code></div>
+      <div class="ex b"><strong>Argument</strong> — value YOU provide<br>Example: <code>192.168.1.1</code>, <code>cisco123</code></div>
+    </div>
+    <div class="al-b" style="margin-top:10px"><span>❓</span><span>Type <code>?</code> at any time to see available commands — this is <strong>context-sensitive help</strong></span></div>
+  </div>
+
+  <div class="card">
+    <span class="tag to">Syntax Conventions</span>
+    <table class="tbl">
+      <tr><th>Symbol</th><th>Meaning</th><th>Example</th></tr>
+      <tr><td><strong>boldface</strong></td><td>Type exactly as shown</td><td><code>enable</code>, <code>ping</code></td></tr>
+      <tr><td><em>italics</em></td><td>Replace with your own value</td><td><em>ip-address</em> → you type the actual IP</td></tr>
+      <tr><td>[x]</td><td>Optional — can skip it</td><td>[description text] — optional</td></tr>
+      <tr><td>{x}</td><td>Required — must provide it</td><td>{ip-address} — must enter an IP</td></tr>
+      <tr><td>x | y</td><td>Choose one option</td><td>tcp | udp — pick one</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <span class="tag tx">Keyboard Shortcuts</span>
+    <div class="sc-grid">
+      <div class="sc-card"><div class="sc-key">Tab</div><p>Auto-complete a partial command name</p></div>
+      <div class="sc-card"><div class="sc-key">↑ Up Arrow</div><p>Recall previous commands from history</p></div>
+      <div class="sc-card"><div class="sc-key">Ctrl + C</div><p>Exit configuration mode → back to Priv EXEC</p></div>
+      <div class="sc-card"><div class="sc-key">Ctrl + Z</div><p>Same as Ctrl+C — exit any config mode</p></div>
+      <div class="sc-card"><div class="sc-key">Ctrl + Shift + 6</div><p>Break — abort ping, traceroute, DNS lookups</p></div>
+      <div class="sc-card"><div class="sc-key">Space Bar</div><p>Show next screen when "--More--" appears</p></div>
+    </div>
+    <div class="al-g" style="margin-top:12px"><span>⚡</span><span>Commands can be shortened! <code>configure terminal</code> → <code>conf t</code> — as long as it's unique</span></div>
+  </div>
+</div>
+
+<!-- ===== 3: CONFIGURATION ===== -->
+<div class="sec" id="s3">
+  <div class="sh">
+    <div class="si" style="background:rgba(244,63,94,.12)">🔒</div>
+    <div><h1>Basic Device Configuration</h1><p>Section 2.4 — Hostname, passwords, encryption, banner</p></div>
+  </div>
+
+  <!-- COMMAND BUILDER -->
+  <div class="card">
+    <span class="tag tr">Interactive Command Builder — Build config step by step</span>
+    <div class="cmd-builder">
+      <div style="font-size:12px;color:var(--t3);margin-bottom:8px;font-family:'JetBrains Mono',monospace">SELECT A TASK:</div>
+      <div class="cb-row" id="cbBtns">
+        <button class="cb-btn on" onclick="setCB(0,this)">1. Hostname</button>
+        <button class="cb-btn" onclick="setCB(1,this)">2. Console Password</button>
+        <button class="cb-btn" onclick="setCB(2,this)">3. Enable Password</button>
+        <button class="cb-btn" onclick="setCB(3,this)">4. VTY Password</button>
+        <button class="cb-btn" onclick="setCB(4,this)">5. Encrypt Passwords</button>
+        <button class="cb-btn" onclick="setCB(5,this)">6. Banner MOTD</button>
+      </div>
+      <div class="cb-output" id="cbOut"></div>
+      <div class="cb-desc" id="cbDesc"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <span class="tag tr">Password Guidelines</span>
+    <div class="pw-wrap">
+      <div class="pw-item"><div class="pw-dot" style="background:var(--a1)"></div><span style="font-size:13px;color:var(--t2)">More than <strong>8 characters</strong> in length</span></div>
+      <div class="pw-item"><div class="pw-dot" style="background:var(--a1)"></div><span style="font-size:13px;color:var(--t2)">Mix of <strong>UPPER, lower, numbers, symbols</strong></span></div>
+      <div class="pw-item"><div class="pw-dot" style="background:var(--a1)"></div><span style="font-size:13px;color:var(--t2)">Different password for <strong>each device</strong></span></div>
+      <div class="pw-item"><div class="pw-dot" style="background:var(--a4)"></div><span style="font-size:13px;color:var(--t2)">❌ Don't use common words (cisco, admin, password)</span></div>
+      <div class="pw-item"><div class="pw-dot" style="background:var(--a4)"></div><span style="font-size:13px;color:var(--t2)">❌ Lab passwords like <code>cisco</code> or <code>class</code> are WEAK — never use in production</span></div>
+    </div>
+  </div>
+
+  <div class="g2">
+    <div class="card">
+      <span class="tag to">Device Name Rules</span>
+      <ul style="margin-top:10px">
+        <li>Start with a <strong>letter</strong></li>
+        <li>No <strong>spaces</strong> allowed</li>
+        <li>End with a letter or <strong>digit</strong></li>
+        <li>Only letters, digits, <strong>dashes</strong></li>
+        <li>Less than <strong>64 characters</strong></li>
+      </ul>
+      <div class="ex o" style="margin-top:10px">
+        ✅ SW-Floor1<br>
+        ✅ Core-Router-01<br>
+        ❌ My Switch (has space)<br>
+        ❌ -Router (starts with dash)
+      </div>
+    </div>
+    <div class="card">
+      <span class="tag tv">Banner MOTD</span>
+      <p style="margin-bottom:10px">Warning message shown to anyone who tries to log in.</p>
+      <div class="term">
+        <div class="term-inner">
+          <span class="p">Switch(config)# </span><span class="c">banner motd</span> <span class="va">#</span><br>
+          <span class="va">Enter TEXT message. End with the character '#'.</span><br>
+          <span class="va">Authorized Access Only!</span><br>
+          <span class="va">Violators will be prosecuted.</span><br>
+          <span class="va">#</span>
+        </div>
+      </div>
+      <div class="al-v" style="margin-top:8px"><span>⚠️</span><span>The <code>#</code> is the delimiter — marks start and end of message</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 4: SAVE CONFIG ===== -->
+<div class="sec" id="s4">
+  <div class="sh">
+    <div class="si" style="background:rgba(167,139,250,.12)">💾</div>
+    <div><h1>Save Configurations</h1><p>Section 2.5 — running-config vs startup-config</p></div>
+  </div>
+
+  <div class="card">
+    <span class="tag tv">The Two Config Files</span>
+    <div class="cfg-visual">
+      <div class="cfg-box" style="border-color:rgba(34,197,94,.3)">
+        <div class="mem" style="color:var(--a3)">📋 RAM (Volatile)</div>
+        <h4 style="color:var(--a1)">running-config</h4>
+        <p style="font-size:12px">Current active config. Changes take effect immediately. LOST when device powers off!</p>
+      </div>
+      <div class="cfg-arrow">
+        <span class="cfg-arr">copy</span>
+        <span style="font-size:20px;color:var(--a1)">→</span>
+        <span class="cfg-arr">save</span>
+      </div>
+      <div class="cfg-box" style="border-color:rgba(56,189,248,.3)">
+        <div class="mem" style="color:var(--a3)">🔒 NVRAM (Non-Volatile)</div>
+        <h4 style="color:var(--a2)">startup-config</h4>
+        <p style="font-size:12px">Saved config. Loaded when device boots. Survives power off and reloads.</p>
+      </div>
+    </div>
+    <div class="term" style="margin-top:16px">
+      <div class="term-inner">
+        <span class="cm">-- Save running config to startup --</span><br>
+        <span class="p">Switch# </span><span class="c">copy running-config startup-config</span><br>
+        <span class="va">Destination filename [startup-config]? </span><span class="c">[Enter]</span><br>
+        <span class="va">Building configuration...</span><br>
+        <span class="va">[OK]</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <span class="tag tv">Recover / Undo Changes</span>
+    <table class="tbl">
+      <tr><th>Situation</th><th>Solution</th></tr>
+      <tr><td><code>reload</code></td><td>Reload device — running-config cleared, startup-config reloads. Causes brief downtime!</td></tr>
+      <tr><td><code>erase startup-config</code></td><td>Wipes the saved startup-config from NVRAM. Then reload to reset everything.</td></tr>
+      <tr><td>Remove commands individually</td><td>Add <code>no</code> before any command to undo it. Example: <code>no hostname</code></td></tr>
+    </table>
+    <div class="al-o" style="margin-top:12px"><span>⚠️</span><span>If bad config was <strong>NOT saved yet</strong> → just reload and it's gone. If it WAS saved → must <code>erase startup-config</code> first!</span></div>
+  </div>
+
+  <div class="card">
+    <span class="tag tg">Full Save Workflow</span>
+    <div class="term">
+      <div class="term-inner">
+        <span class="cm">-- Check current config --</span><br>
+        <span class="p">Switch# </span><span class="c">show running-config</span><br><br>
+        <span class="cm">-- Save it --</span><br>
+        <span class="p">Switch# </span><span class="c">copy running-config startup-config</span><br><br>
+        <span class="cm">-- Verify it saved --</span><br>
+        <span class="p">Switch# </span><span class="c">show startup-config</span><br><br>
+        <span class="cm">-- If you need to erase and restart --</span><br>
+        <span class="p">Switch# </span><span class="c">erase startup-config</span><br>
+        <span class="p">Switch# </span><span class="c">reload</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 5: IP ADDRESSING ===== -->
+<div class="sec" id="s5">
+  <div class="sh">
+    <div class="si" style="background:rgba(56,189,248,.12)">🌐</div>
+    <div><h1>Ports & IP Addressing</h1><p>Sections 2.6 & 2.7 — IPv4, IPv6, and Switch SVI config</p></div>
+  </div>
+
+  <div class="card">
+    <span class="tag tb">IPv4 Address Structure</span>
+    <div class="ip-visual">
+      <div class="ip-oct">192</div><div class="ip-dot">.</div>
+      <div class="ip-oct">168</div><div class="ip-dot">.</div>
+      <div class="ip-oct">10</div><div class="ip-dot">.</div>
+      <div class="ip-oct">5</div>
+    </div>
+    <p>Each number = 0 to 255 — called <strong>dotted decimal notation</strong></p>
+    <div class="g3" style="margin-top:14px">
+      <div class="ex b"><strong>IP Address</strong><br>192.168.10.5<br>Unique ID of your device on the network</div>
+      <div class="ex o"><strong>Subnet Mask</strong><br>255.255.255.0<br>Tells which part is network vs host</div>
+      <div class="ex"><strong>Default Gateway</strong><br>192.168.10.1<br>Router address — used to reach other networks</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <span class="tag tb">IPv6 Address</span>
+    <div style="margin-top:10px;padding:14px;background:rgba(56,189,248,.06);border:1px solid rgba(56,189,248,.2);border-radius:10px;font-family:'JetBrains Mono',monospace;font-size:14px;color:var(--a2);word-break:break-all">
+      2001:0db8:85a3:0000:0000:8a2e:0370:7334
+    </div>
+    <ul style="margin-top:12px">
+      <li>128 bits long (vs IPv4's 32 bits)</li>
+      <li>Written in <strong>hexadecimal</strong>, groups of 4 digits separated by <code>:</code></li>
+      <li>Not case-sensitive — upper or lowercase OK</li>
+      <li>The future replacement for IPv4</li>
+    </ul>
+    <div class="al-b" style="margin-top:10px"><span>🔄</span><span>IPv6 uses <strong>DHCPv6</strong> and <strong>SLAAC</strong> for automatic address assignment (instead of DHCP)</span></div>
+  </div>
+
+  <div class="card">
+    <span class="tag tg">Switch Virtual Interface (SVI) Configuration</span>
+    <p style="margin-bottom:12px">To manage a switch remotely, you need to assign it an IP address on the virtual interface (VLAN 1):</p>
+    <div class="term">
+      <div class="term-inner">
+        <span class="p">Switch# </span><span class="c">configure terminal</span><br>
+        <span class="p">Switch(config)# </span><span class="c">interface vlan</span> <span class="va">1</span><br>
+        <span class="p">Switch(config-if)# </span><span class="c">ip address</span> <span class="va">192.168.1.10 255.255.255.0</span><br>
+        <span class="p">Switch(config-if)# </span><span class="c">no shutdown</span><br>
+        <span class="va">%LINEPROTO-5-UPDOWN: Line protocol on Interface Vlan1, changed state to up</span><br>
+        <span class="p">Switch(config-if)# </span><span class="c">exit</span><br>
+        <span class="p">Switch(config)# </span><span class="c">ip default-gateway</span> <span class="va">192.168.1.1</span>
+      </div>
+    </div>
+    <div class="al-g" style="margin-top:10px"><span>✅</span><span><code>no shutdown</code> enables the interface — without it the interface stays down!</span></div>
+  </div>
+
+  <div class="g2">
+    <div class="card">
+      <span class="tag tb">Manual IP (Windows PC)</span>
+      <div class="ex b" style="margin-top:8px;font-family:'Plus Jakarta Sans',sans-serif">
+        Control Panel<br>
+        → Network Sharing Center<br>
+        → Change adapter settings<br>
+        → Right-click → Properties<br>
+        → IPv4 Properties<br>
+        → Enter IP, Mask, Gateway manually
+      </div>
+    </div>
+    <div class="card">
+      <span class="tag tg">Automatic IP (DHCP)</span>
+      <div class="ex" style="margin-top:8px;font-family:'Plus Jakarta Sans',sans-serif">
+        Same path as manual but:<br>
+        → Select "Obtain an IP address automatically"<br>
+        → Select "Obtain DNS server address automatically"<br><br>
+        ✅ Default setting on most devices
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 6: CLI SIMULATOR ===== -->
+<div class="sec" id="s6">
+  <div class="sh">
+    <div class="si" style="background:rgba(34,197,94,.12)">🖥️</div>
+    <div><h1>CLI Simulator</h1><p>Practice full switch configuration — step by step</p></div>
+  </div>
+  <div class="card">
+    <span class="tag tg">Complete Switch Setup — Click each step</span>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px" id="simBtns">
+      <button class="cb-btn on" onclick="setSim(0,this)">① Connect</button>
+      <button class="cb-btn" onclick="setSim(1,this)">② Hostname</button>
+      <button class="cb-btn" onclick="setSim(2,this)">③ Passwords</button>
+      <button class="cb-btn" onclick="setSim(3,this)">④ Encrypt</button>
+      <button class="cb-btn" onclick="setSim(4,this)">⑤ Banner</button>
+      <button class="cb-btn" onclick="setSim(5,this)">⑥ IP Address</button>
+      <button class="cb-btn" onclick="setSim(6,this)">⑦ Save</button>
+      <button class="cb-btn" onclick="setSim(7,this)">⑧ Verify</button>
+    </div>
+    <div class="term" id="simTerm" style="min-height:160px"><div class="term-inner" id="simOut"></div></div>
+    <div class="ex" id="simDesc" style="margin-top:10px"></div>
+  </div>
+</div>
+
+<!-- ===== 7: QUIZ ===== -->
+<div class="sec" id="s7">
+  <div class="sh">
+    <div class="si" style="background:rgba(34,197,94,.12)">✅</div>
+    <div><h1>Test Yourself</h1><p>10 questions on Module 2</p></div>
+  </div>
+  <div class="pbw">
+    <div class="pb"><div class="pbf" id="qpb" style="width:0%"></div></div>
+    <div class="pt" id="qpt">0 / 10</div>
+  </div>
+  <div id="qqs"></div>
+  <div class="qsc" id="qsc">
+    <div class="sc-big" id="qbig"></div>
+    <div class="sc-sub">correct out of 10</div>
+    <div class="sc-msg" id="qmsg"></div>
+    <button class="btn-o" onclick="resetQ()">🔄 Try Again</button>
+  </div>
+</div>
+
+</div><!-- /main -->
+<div class="sdots" id="sdots"></div>
+
+<script>
+// ===== NAV =====
+const secs=['s0','s1','s2','s3','s4','s5','s6','s7'];
+function go(n){
+  secs.forEach((s,i)=>{
+    document.getElementById(s).classList.toggle('on',i===n);
+    document.querySelectorAll('.nb')[i].classList.toggle('on',i===n);
+    document.querySelectorAll('.sd')[i].classList.toggle('on',i===n);
+  });
+  window.scrollTo({top:0,behavior:'smooth'});
+  if(n===7)buildQ();
+}
+const sdEl=document.getElementById('sdots');
+secs.forEach((_,i)=>{
+  const d=document.createElement('div');
+  d.className='sd'+(i===0?' on':'');
+  d.onclick=()=>go(i);
+  sdEl.appendChild(d);
+});
+
+// ===== MODE TOGGLE =====
+function toggleMode(el){
+  const wasOn=el.classList.contains('on');
+  document.querySelectorAll('.mode-box').forEach(m=>m.classList.remove('on'));
+  if(!wasOn)el.classList.add('on');
+}
+
+// ===== COMMAND BUILDER =====
+const cbData=[
+  {
+    out:`<span class="p">Switch> </span><span class="c">enable</span>\n<span class="p">Switch# </span><span class="c">configure terminal</span>\n<span class="p">Switch(config)# </span><span class="c">hostname</span> <span class="va">SW-Floor1</span>\n<span class="p">SW-Floor1(config)# </span>`,
+    desc:'Set the device hostname. The prompt immediately changes to show the new name. Use: hostname [name]. To reset: no hostname'
+  },
+  {
+    out:`<span class="p">Switch(config)# </span><span class="c">line console</span> <span class="va">0</span>\n<span class="p">Switch(config-line)# </span><span class="c">password</span> <span class="va">cisco123</span>\n<span class="p">Switch(config-line)# </span><span class="c">login</span>\n<span class="p">Switch(config-line)# </span><span class="c">exit</span>`,
+    desc:'Secures the physical console port. "login" activates the password check. Without "login", the password is ignored!'
+  },
+  {
+    out:`<span class="p">Switch(config)# </span><span class="c">enable secret</span> <span class="va">Admin@Pass1</span>\n<span class="cm">-- "enable secret" is encrypted, unlike "enable password" --</span>`,
+    desc:'Secures Privileged EXEC mode. "enable secret" is always preferred over "enable password" because it stores the password encrypted by default.'
+  },
+  {
+    out:`<span class="p">Switch(config)# </span><span class="c">line vty</span> <span class="va">0 15</span>\n<span class="p">Switch(config-line)# </span><span class="c">password</span> <span class="va">Remote@Pass1</span>\n<span class="p">Switch(config-line)# </span><span class="c">login</span>\n<span class="p">Switch(config-line)# </span><span class="c">exit</span>`,
+    desc:'Secures remote access via Telnet/SSH. "vty 0 15" covers all 16 virtual terminal lines (0 through 15).'
+  },
+  {
+    out:`<span class="p">Switch(config)# </span><span class="c">service password-encryption</span>\n<span class="p">Switch(config)# </span><span class="c">end</span>\n<span class="p">Switch# </span><span class="c">show running-config</span>\n<span class="va">...</span>\n<span class="va">password 7 0822455D0A16</span>  <span class="cm">← encrypted!</span>`,
+    desc:'Encrypts all plaintext passwords in the config file. Without this, passwords are visible to anyone who can view the config!'
+  },
+  {
+    out:`<span class="p">Switch(config)# </span><span class="c">banner motd</span> <span class="va">#</span>\n<span class="va">Enter TEXT message. End with the character '#'.</span>\n<span class="va">WARNING: Authorized Access Only!</span>\n<span class="va">Unauthorized access is prohibited.</span>\n<span class="va">#</span>\n<span class="p">Switch(config)# </span>`,
+    desc:'Message of the Day banner — displayed to everyone who connects. Important for legal protection. The # is just a delimiter (you can use any character).'
+  }
+];
+function setCB(i,btn){
+  document.querySelectorAll('#cbBtns .cb-btn').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+  document.getElementById('cbOut').innerHTML=cbData[i].out;
+  document.getElementById('cbDesc').textContent=cbData[i].desc;
+}
+setCB(0,document.querySelector('#cbBtns .cb-btn'));
+
+// ===== SIMULATOR =====
+const simData=[
+  {
+    out:`<span class="cm">-- Connect console cable: PC → Switch --</span>\n<span class="cm">-- Open PuTTY or Tera Term --</span>\n<span class="cm">-- Select Serial, COM port, 9600 baud --</span>\n\n<span class="va">Press RETURN to get started!</span>\n\n<span class="p">Switch> </span>`,
+    desc:'Connect a rollover/console cable from PC serial port (or USB adapter) to switch console port. Open terminal emulation software at 9600 baud rate.'
+  },
+  {
+    out:`<span class="p">Switch> </span><span class="c">enable</span>\n<span class="p">Switch# </span><span class="c">configure terminal</span>\n<span class="va">Enter configuration commands, one per line. End with CNTL/Z.</span>\n<span class="p">Switch(config)# </span><span class="c">hostname</span> <span class="va">SW-Lab</span>\n<span class="p">SW-Lab(config)# </span>`,
+    desc:'Enter privileged mode with "enable", then global config with "configure terminal". Set a unique hostname — the prompt updates immediately.'
+  },
+  {
+    out:`<span class="p">SW-Lab(config)# </span><span class="c">enable secret</span> <span class="va">Class@789</span>\n<span class="p">SW-Lab(config)# </span><span class="c">line console 0</span>\n<span class="p">SW-Lab(config-line)# </span><span class="c">password</span> <span class="va">Cisco@123</span>\n<span class="p">SW-Lab(config-line)# </span><span class="c">login</span>\n<span class="p">SW-Lab(config-line)# </span><span class="c">line vty 0 15</span>\n<span class="p">SW-Lab(config-line)# </span><span class="c">password</span> <span class="va">Cisco@123</span>\n<span class="p">SW-Lab(config-line)# </span><span class="c">login</span>\n<span class="p">SW-Lab(config-line)# </span><span class="c">exit</span>`,
+    desc:'Set three passwords: enable secret (priv EXEC), console (physical access), and VTY lines (remote Telnet/SSH access). Always include "login" to activate console/VTY passwords.'
+  },
+  {
+    out:`<span class="p">SW-Lab(config)# </span><span class="c">service password-encryption</span>\n<span class="p">SW-Lab(config)# </span><span class="c">end</span>\n<span class="p">SW-Lab# </span><span class="c">show running-config | include password</span>\n<span class="va">enable secret 5 $1$mERr$ILmI/y6rGR62kNLbV2Uxi.</span>\n<span class="va">password 7 0822455D0A16</span>`,
+    desc:'Encrypt all plaintext passwords with "service password-encryption". Passwords now appear as hashed/encrypted strings in the config.'
+  },
+  {
+    out:`<span class="p">SW-Lab(config)# </span><span class="c">banner motd</span> <span class="va">#</span>\n<span class="va">*********************************************</span>\n<span class="va">*  WARNING: Authorized Personnel Only!      *</span>\n<span class="va">*  Unauthorized access will be prosecuted.  *</span>\n<span class="va">*********************************************</span>\n<span class="va">#</span>`,
+    desc:'Add a legal warning banner. This is important — it notifies users that the device is monitored and access is restricted.'
+  },
+  {
+    out:`<span class="p">SW-Lab(config)# </span><span class="c">interface vlan 1</span>\n<span class="p">SW-Lab(config-if)# </span><span class="c">ip address</span> <span class="va">192.168.1.10 255.255.255.0</span>\n<span class="p">SW-Lab(config-if)# </span><span class="c">no shutdown</span>\n<span class="va">%LINEPROTO-5-UPDOWN: Vlan1, changed state to up</span>\n<span class="p">SW-Lab(config-if)# </span><span class="c">exit</span>\n<span class="p">SW-Lab(config)# </span><span class="c">ip default-gateway</span> <span class="va">192.168.1.1</span>`,
+    desc:'Assign IP to VLAN 1 (the management interface). "no shutdown" enables it. Set a default gateway so the switch can communicate with other networks.'
+  },
+  {
+    out:`<span class="p">SW-Lab(config)# </span><span class="c">end</span>\n<span class="p">SW-Lab# </span><span class="c">copy running-config startup-config</span>\n<span class="va">Destination filename [startup-config]?</span> <span class="c">[Enter]</span>\n<span class="va">Building configuration...</span>\n<span class="va">[OK]</span>\n<span class="p">SW-Lab# </span>`,
+    desc:'CRITICAL STEP — save your work! "copy running-config startup-config" saves the active config to NVRAM so it survives a reboot.'
+  },
+  {
+    out:`<span class="p">SW-Lab# </span><span class="c">show running-config</span>\n<span class="va">Building configuration...</span>\n<span class="va">hostname SW-Lab</span>\n<span class="va">enable secret 5 $1$mERr$ILm...</span>\n<span class="va">interface Vlan1</span>\n<span class="va"> ip address 192.168.1.10 255.255.255.0</span>\n<span class="va"> no shutdown</span>\n<span class="p">SW-Lab# </span><span class="c">show interfaces vlan 1</span>\n<span class="va">Vlan1 is up, line protocol is up</span>\n<span class="p">SW-Lab# </span><span class="c">ping</span> <span class="va">192.168.1.1</span>\n<span class="va">!!!!!</span>  <span class="cm">← 5 exclamation marks = success</span>`,
+    desc:'Verify with "show running-config" (see all settings), "show interfaces" (check interface status), and "ping" (test connectivity). !!!!! = all 5 pings succeeded!'
+  }
+];
+function setSim(i,btn){
+  document.querySelectorAll('#simBtns .cb-btn').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+  document.getElementById('simOut').innerHTML=simData[i].out;
+  document.getElementById('simDesc').textContent=simData[i].desc;
+}
+setSim(0,document.querySelector('#simBtns .cb-btn'));
+
+// ===== QUIZ =====
+const qs=[
+  {q:'Which symbol appears at the end of the Privileged EXEC mode prompt?',opts:['$','#','>','@'],ans:1,exp:'Privileged EXEC mode shows Switch# — the hash (#) identifies this mode. User EXEC shows > (greater than).'},
+  {q:'Which access method is RECOMMENDED for secure remote CLI access?',opts:['Console','Telnet','SSH','GUI'],ans:2,exp:'SSH (Secure Shell) is recommended for remote access because it encrypts all traffic. Telnet sends data as plaintext.'},
+  {q:'What command saves the running config to NVRAM?',opts:['save running-config','write startup-config','copy running-config startup-config','store config nvram'],ans:2,exp:'"copy running-config startup-config" is the correct command to save to NVRAM (startup-config).'},
+  {q:'What does "no shutdown" do on an interface?',opts:['Deletes the interface','Disables the interface','Enables/activates the interface','Shows interface status'],ans:2,exp:'"no shutdown" enables/activates an interface. By default, switch interfaces may be administratively down.'},
+  {q:'Where is the running-config stored?',opts:['NVRAM','Flash','ROM','RAM'],ans:3,exp:'running-config is stored in RAM (volatile memory) — it is lost when the device powers off.'},
+  {q:'What command encrypts all plaintext passwords in the config?',opts:['enable secret','password encrypt','service password-encryption','crypto passwords all'],ans:2,exp:'"service password-encryption" encrypts all existing plaintext passwords in the configuration file.'},
+  {q:'Which command is used to set a legal warning message?',opts:['message of day','alert login','banner motd','login warning'],ans:2,exp:'"banner motd # message #" sets the Message of the Day banner shown to users when they connect.'},
+  {q:'How many VTY lines does a typical Cisco switch support?',opts:['4 (0-3)','8 (0-7)','16 (0-15)','32 (0-31)'],ans:2,exp:'Most Cisco switches support 16 VTY lines numbered 0 to 15. Command: line vty 0 15'},
+  {q:'What is the IPv4 subnet mask used for?',opts:['Encrypt data packets','Differentiate network from host portion of IP','Assign gateway address','Identify MAC addresses'],ans:1,exp:'The subnet mask is a 32-bit value that distinguishes the network portion from the host portion of an IPv4 address.'},
+  {q:'Which command enters Global Configuration mode?',opts:['enable','conf t','config global','setup mode'],ans:1,exp:'"configure terminal" (shortened to "conf t") from Privileged EXEC mode enters Global Configuration mode.'},
+];
+let qa=0,qok=0;
+function buildQ(){
+  qa=0;qok=0;updateQP();
+  document.getElementById('qsc').style.display='none';
+  document.getElementById('qqs').innerHTML=qs.map((q,i)=>`
+    <div class="qq" id="qq${i}">
+      <div class="qn">Question ${i+1} / ${qs.length}</div>
+      <div class="qt">${q.q}</div>
+      <div class="opts">${q.opts.map((o,j)=>`<button class="ob" onclick="ansQ(${i},${j})">${o}</button>`).join('')}</div>
+      <div class="qfb" id="qf${i}"></div>
+    </div>`).join('');
+}
+function ansQ(qi,oi){
+  const q=qs[qi],card=document.getElementById('qq'+qi);
+  if(card.classList.contains('lk'))return;
+  card.classList.add('lk');
+  const btns=card.querySelectorAll('.ob');
+  btns[oi].classList.add(oi===q.ans?'ok':'no');
+  if(oi!==q.ans)btns[q.ans].classList.add('ok');
+  const fb=document.getElementById('qf'+qi);
+  fb.style.display='block';
+  fb.className='qfb '+(oi===q.ans?'fb-ok':'fb-no');
+  fb.textContent=(oi===q.ans?'✓ Correct! ':'✗ Wrong — ')+q.exp;
+  if(oi===q.ans)qok++;
+  qa++;updateQP();
+  if(qa===qs.length)setTimeout(showQScore,700);
+}
+function updateQP(){
+  document.getElementById('qpb').style.width=(qa/qs.length*100)+'%';
+  document.getElementById('qpt').textContent=qa+' / '+qs.length;
+}
+function showQScore(){
+  const sc=document.getElementById('qsc');sc.style.display='block';
+  document.getElementById('qbig').textContent=qok+' / '+qs.length;
+  document.getElementById('qmsg').textContent=qok>=9?'🎉 Excellent! You know your Cisco IOS!':qok>=7?'👍 Good! Review a few commands.':qok>=5?'📚 Practice the CLI simulator more.':'🔄 Review the sections and try again!';
+  sc.scrollIntoView({behavior:'smooth'});
+}
+function resetQ(){buildQ();document.getElementById('qqs').scrollIntoView({behavior:'smooth'});}
+buildQ();
+</script>
+</body>
+</html>
