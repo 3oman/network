@@ -100,24 +100,21 @@
     <script>
         const container = document.getElementById('buttonsContainer');
         const totalModules = 10;
-        const activeModule = 4;
+        const activeModules = [3, 4];
 
         for (let i = 1; i <= totalModules; i++) {
-            const isActive = (i === activeModule);
+            const isActive = activeModules.includes(i);
             const button = document.createElement('button');
+        
             button.textContent = `Module ${i}`;
             button.className = `module-btn ${isActive ? 'active' : 'inactive'}`;
-            
+        
             if (isActive) {
                 button.addEventListener('click', () => {
-                    window.location.href = 'Module4';
-                });
-            } else {
-                button.addEventListener('click', () => {
-                    // silently do nothing - inactive
+                    window.location.href = `Module${i}`;
                 });
             }
-            
+        
             container.appendChild(button);
         }
     </script>
