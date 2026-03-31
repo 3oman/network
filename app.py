@@ -11,5 +11,9 @@ def index():
 def module4():
     return render_template('Module4.html')
 
+@app.route('/Module3')
+def module4():
+    return render_template('Module3.html')
+
 
 if __name__ == '__main__':    app.run(debug=True)
