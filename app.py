@@ -12,7 +12,7 @@ def module4():
     return render_template('Module4.html')
 
 @app.route('/Module3')
-def module4():
+def module3():
     return render_template('Module3.html')
 
 
