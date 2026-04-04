@@ -19,7 +19,7 @@ def module3():
 def module2():
     return render_template('Module2.html')
 
-@app.raute('/english_words_1_3')
+@app.route('/english_words_1_3')
 def english_words_1_3():
     return render_template('english_words_1_3.html')
     
