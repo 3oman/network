@@ -22,5 +22,10 @@ def module2():
 @app.route('/english_words_1_3')
 def english_words_1_3():
     return render_template('english_words_1_3.html')
-    
+
+@app.route('/Fundemantals_Ch_1_2')
+def Fundemantals_Ch_1_2():
+    return render_template('Fundemantals_Ch_1_2.html')
+
+
 if __name__ == '__main__':    app.run(debug=True)
