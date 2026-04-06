@@ -27,5 +27,8 @@ def english_words_1_3():
 def Fundemantals_Ch_1_2():
     return render_template('Fundemantals_Ch_1_2.html')
 
+@app.route('/Module4_db')
+def Module4_db():
+    return render_tamplate('Module4_db.html')
 
 if __name__ == '__main__':    app.run(debug=True)
