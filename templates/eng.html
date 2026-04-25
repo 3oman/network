@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reflective Writing — DIEP Guide</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Cairo:wght@400;600;700&family=Lato:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --green-dark: #085041;
+    --green-mid: #1D9E75;
+    --green-light: #E1F5EE;
+    --green-pale: #9FE1CB;
+    --blue-dark: #042C53;
+    --blue-mid: #378ADD;
+    --blue-light: #E6F1FB;
+    --blue-muted: #B5D4F4;
+    --amber-dark: #412402;
+    --amber-mid: #EF9F27;
+    --amber-light: #FAEEDA;
+    --amber-muted: #FAC775;
+    --pink-dark: #4B1528;
+    --pink-mid: #D4537E;
+    --pink-light: #FBEAF0;
+    --pink-muted: #F4C0D1;
+    --teal-dark: #173404;
+    --teal-mid: #639922;
+    --teal-light: #EAF3DE;
+    --teal-muted: #C0DD97;
+    --gray-bg: #F7F6F3;
+    --gray-border: #E0DED6;
+    --gray-text: #5F5E5A;
+    --text-main: #1a1a18;
+    --card-bg: #ffffff;
+    --radius-md: 8px;
+    --radius-lg: 14px;
+  }
+
+  body {
+    font-family: 'Lato', sans-serif;
+    background: var(--gray-bg);
+    color: var(--text-main);
+    padding: 2rem 1rem 4rem;
+    min-height: 100vh;
+  }
+
+  .page {
+    max-width: 760px;
+    margin: 0 auto;
+  }
+
+  /* HERO */
+  .hero {
+    background: linear-gradient(135deg, #1D9E75 0%, #085041 100%);
+    border-radius: var(--radius-lg);
+    padding: 2.5rem 2rem;
+    margin-bottom: 2rem;
+    text-align: center;
+    color: var(--green-light);
+  }
+
+  .hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 30px;
+    color: #fff;
+    margin-bottom: 0.5rem;
+    letter-spacing: -0.5px;
+  }
+
+  .hero p {
+    font-family: 'Cairo', sans-serif;
+    font-size: 15px;
+    color: var(--green-pale);
+    direction: rtl;
+    margin-top: 0.25rem;
+  }
+
+  .hero .subtitle-en {
+    font-size: 14px;
+    color: var(--green-pale);
+    margin-top: 0.2rem;
+  }
+
+  /* DIEP BAR */
+  .diep-bar {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 2.5rem;
+    flex-wrap: wrap;
+  }
+
+  .diep-pill {
+    flex: 1;
+    min-width: 140px;
+    border-radius: 50px;
+    padding: 0.65rem 1rem;
+    text-align: center;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    transition: transform 0.15s;
+  }
+
+  .diep-pill:hover { transform: translateY(-2px); }
+
+  .pill-d { background: var(--blue-muted); color: var(--blue-dark); }
+  .pill-i { background: var(--amber-muted); color: var(--amber-dark); }
+  .pill-e { background: var(--teal-muted); color: var(--teal-dark); }
+  .pill-p { background: var(--pink-muted); color: var(--pink-dark); }
+
+  .pill-ar {
+    font-family: 'Cairo', sans-serif;
+    font-size: 11px;
+    direction: rtl;
+    display: block;
+    font-weight: 600;
+    opacity: 0.8;
+    margin-top: 2px;
+  }
+
+  /* SECTION HEADING */
+  .section-heading {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    margin: 2.5rem 0 1.25rem;
+    color: var(--text-main);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .section-heading::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--gray-border);
+  }
+
+  .topic-icon-lg {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+
+  /* TOPIC CARD */
+  .topic-card {
+    border: 1px solid var(--gray-border);
+    border-radius: var(--radius-lg);
+    margin-bottom: 1.5rem;
+    overflow: hidden;
+    background: var(--card-bg);
+    box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+  }
+
+  .topic-header {
+    padding: 1rem 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border-bottom: 1px solid var(--gray-border);
+    background: #fafaf8;
+  }
+
+  .topic-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+
+  .topic-title-en { font-size: 16px; font-weight: 700; color: var(--text-main); }
+  .topic-title-ar {
+    font-family: 'Cairo', sans-serif;
+    font-size: 13px;
+    color: var(--gray-text);
+    direction: rtl;
+    margin-top: 2px;
+  }
+
+  .section-block {
+    padding: 1.25rem 1.5rem;
+    border-bottom: 1px solid var(--gray-border);
+  }
+
+  .section-block:last-child { border-bottom: none; }
+
+  .section-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 0.75rem;
+    padding: 4px 12px;
+    border-radius: 50px;
+  }
+
+  .lbl-d { background: var(--blue-light); color: var(--blue-dark); }
+  .lbl-i { background: var(--amber-light); color: var(--amber-dark); }
+  .lbl-e { background: var(--teal-light); color: var(--teal-dark); }
+  .lbl-p { background: var(--pink-light); color: var(--pink-dark); }
+
+  .ar-label {
+    font-family: 'Cairo', sans-serif;
+    font-size: 10px;
+    direction: rtl;
+    font-weight: 600;
+  }
+
+  .para-en {
+    font-size: 14.5px;
+    line-height: 1.8;
+    margin-bottom: 0.75rem;
+    color: var(--text-main);
+  }
+
+  .para-ar {
+    font-family: 'Cairo', sans-serif;
+    font-size: 14px;
+    line-height: 2;
+    direction: rtl;
+    color: var(--gray-text);
+    background: var(--gray-bg);
+    padding: 0.65rem 1rem;
+    border-radius: var(--radius-md);
+    border-right: 3px solid var(--gray-border);
+  }
+
+  /* KEYWORD HIGHLIGHTS */
+  .kw-d { background: var(--blue-muted); color: var(--blue-dark); padding: 2px 6px; border-radius: 4px; font-weight: 700; }
+  .kw-i { background: var(--amber-muted); color: var(--amber-dark); padding: 2px 6px; border-radius: 4px; font-weight: 700; }
+  .kw-e { background: var(--teal-muted); color: var(--teal-dark); padding: 2px 6px; border-radius: 4px; font-weight: 700; }
+  .kw-p { background: var(--pink-muted); color: var(--pink-dark); padding: 2px 6px; border-radius: 4px; font-weight: 700; }
+  .kw-frame {
+    background: var(--amber-light);
+    color: #633806;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-weight: 700;
+    border: 1.5px dashed var(--amber-mid);
+  }
+
+  /* TIP BOXES */
+  .tip-box {
+    border-radius: var(--radius-md);
+    padding: 0.75rem 1rem;
+    margin-top: 0.75rem;
+    font-size: 13px;
+    border-left: 3px solid;
+  }
+
+  .tip-do { background: var(--teal-light); border-color: var(--teal-mid); color: var(--teal-dark); }
+  .tip-dont { background: #FCEBEB; border-color: #E24B4A; color: #501313; }
+  .tip-do strong, .tip-dont strong { display: block; font-size: 11px; letter-spacing: 0.5px; margin-bottom: 3px; opacity: 0.7; text-transform: uppercase; }
+  .tip-ar { font-family: 'Cairo', sans-serif; direction: rtl; font-size: 12px; margin-top: 4px; opacity: 0.85; }
+
+  /* FULL PARAGRAPH BOX */
+  .full-para-box {
+    border: 1px solid var(--gray-border);
+    border-radius: var(--radius-lg);
+    margin-bottom: 2.5rem;
+    overflow: hidden;
+    background: var(--card-bg);
+    box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+  }
+
+  .full-para-header {
+    background: var(--green-dark);
+    color: var(--green-light);
+    padding: 0.85rem 1.5rem;
+    font-size: 14px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .full-para-header span {
+    font-family: 'Cairo', sans-serif;
+    font-size: 13px;
+    opacity: 0.8;
+    direction: rtl;
+    font-weight: 400;
+  }
+
+  .full-para-body { padding: 1.5rem; }
+
+  .full-para-body p {
+    font-size: 14.5px;
+    line-height: 1.9;
+    margin-bottom: 0.75rem;
+  }
+
+  /* LEGEND */
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 1.25rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--gray-border);
+  }
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--gray-text);
+  }
+
+  .legend-dot {
+    width: 14px;
+    height: 14px;
+    border-radius: 4px;
+    flex-shrink: 0;
+  }
+
+  .words-count {
+    font-size: 12px;
+    color: var(--gray-text);
+    margin-top: 0.75rem;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .dot-green {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--teal-mid);
+    display: inline-block;
+  }
+
+  /* QUICK REFERENCE */
+  .ref-grid { display: flex; flex-direction: column; gap: 8px; margin-bottom: 2rem; }
+
+  .ref-row {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    background: var(--card-bg);
+    border: 1px solid var(--gray-border);
+    border-radius: var(--radius-md);
+    padding: 1rem 1.25rem;
+    transition: box-shadow 0.15s;
+  }
+
+  .ref-row:hover { box-shadow: 0 2px 10px rgba(0,0,0,0.07); }
+
+  .ref-badge {
+    font-weight: 700;
+    font-size: 13px;
+    padding: 4px 14px;
+    border-radius: 50px;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .ref-title { font-size: 14px; font-weight: 700; margin-bottom: 3px; }
+  .ref-phrase { font-size: 13px; color: var(--gray-text); font-style: italic; margin-bottom: 3px; }
+  .ref-ar { font-family: 'Cairo', sans-serif; font-size: 12px; color: var(--gray-text); direction: rtl; }
+
+  /* FOOTER */
+  .footer {
+    text-align: center;
+    font-family: 'Cairo', sans-serif;
+    font-size: 13px;
+    color: var(--gray-text);
+    margin-top: 3rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--gray-border);
+    direction: rtl;
+  }
+
+  @media (max-width: 600px) {
+    body { padding: 1rem 0.75rem 3rem; }
+    .hero h1 { font-size: 22px; }
+    .diep-pill { min-width: 100%; }
+    .full-para-header { flex-direction: column; gap: 4px; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="hero">
+    <h1>Reflective Writing — DIEP Model</h1>
+    <p class="subtitle-en">Complete Guide with Examples | دليل شامل مع أمثلة كاملة</p>
+    <p>تعلّم الطريقة الصح في أقل من ساعة — مترجم بالعربي والإنجليزي</p>
+  </div>
+
+  <div class="diep-bar">
+    <div class="diep-pill pill-d">D — Describe<span class="pill-ar">اوصف ماذا تعلمت</span></div>
+    <div class="diep-pill pill-i">I — Interpret<span class="pill-ar">كيف شعرت؟</span></div>
+    <div class="diep-pill pill-e">E — Evaluate<span class="pill-ar">ليش مهم لك؟</span></div>
+    <div class="diep-pill pill-p">P — Plan<span class="pill-ar">ماذا ستفعل؟</span></div>
+  </div>
+
+  <!-- =================== TOPIC 1: E-WASTE =================== -->
+  <h2 class="section-heading">
+    <span class="topic-icon-lg" style="background:var(--blue-light);color:var(--blue-dark);">♻</span>
+    Topic 1 — E-waste
+  </h2>
+
+  <div class="topic-card">
+    <div class="topic-header">
+      <div class="topic-icon" style="background:var(--blue-light);color:#185FA5;">♻</div>
+      <div>
+        <div class="topic-title-en">Electronic Waste (E-waste)</div>
+        <div class="topic-title-ar">النفايات الإلكترونية</div>
+      </div>
+    </div>
+
+    <div class="section-block">
+      <div class="section-label lbl-d">D <span class="ar-label">— وصف</span></div>
+      <p class="para-en">The lecture discussed the growing problem of <span class="kw-d">electronic waste</span>, commonly known as <span class="kw-d">e-waste</span>, which refers to <span class="kw-d">discarded electronic devices</span> such as smartphones and laptops. According to the topic, millions of tons of e-waste are <span class="kw-d">generated globally</span> each year, releasing <span class="kw-d">toxic substances</span> that seriously harm soil and water sources.</p>
+      <p class="para-ar">تناولت المحاضرة مشكلة النفايات الإلكترونية المتزايدة، وهي الأجهزة الإلكترونية كالهواتف والحواسيب التي يتم التخلص منها. وتشير الأرقام إلى أن ملايين الأطنان من هذه النفايات تُنتج سنوياً على مستوى العالم، مما يُطلق مواد سامة تُلحق أضراراً جسيمة بالتربة والمياه.</p>
+      <div class="tip-box tip-do"><strong>✓ Why this works — ليش هذا صح</strong>فكرة واحدة محددة + معلومة دقيقة + لا نسخ من النص الأصلي<div class="tip-ar">One specific idea + precise detail + no copying from source text</div></div>
+    </div>
+
+    <div class="section-block">
+      <div class="section-label lbl-i">I <span class="ar-label">— تفسير</span></div>
+      <p class="para-en"><span class="kw-frame">After learning about</span> e-waste, I felt both <span class="kw-i">worried</span> and <span class="kw-i">motivated</span>. I felt <span class="kw-i">worried</span> because I use electronic devices every day and had never considered the environmental consequences of discarding them improperly. However, I also felt <span class="kw-i">motivated</span> because the lecture showed that individuals can make a meaningful difference through simple everyday actions.</p>
+      <p class="para-ar">بعد تعلّمي عن النفايات الإلكترونية، شعرت بالقلق والتحفز في آنٍ واحد. شعرت بالقلق لأنني أستخدم الأجهزة الإلكترونية يومياً ولم أفكر في عواقب التخلص منها بطريقة خاطئة. لكنني شعرت أيضاً بالتحفز لأن المحاضرة أظهرت أن الأفراد يمكنهم إحداث فرق من خلال تصرفات بسيطة.</p>
+      <div class="tip-box tip-dont"><strong>✗ Avoid — تجنب</strong>"I felt sad." — لا تكتف بتسمية الشعور بدون سبب شخصي<div class="tip-ar">Never name an emotion without explaining WHY you personally felt that way</div></div>
+    </div>
+
+    <div class="section-block">
+      <div class="section-label lbl-e">E <span class="ar-label">— تقييم</span></div>
+      <p class="para-en">This topic is <span class="kw-e">important to me</span> because, <span class="kw-frame">as a young adult</span> who relies on technology for studying and communication, I feel <span class="kw-e">personally responsible</span> for making more <span class="kw-e">sustainable choices</span>. Every phone or laptop I own will eventually become e-waste, which makes this issue directly relevant to my daily lifestyle and decisions.</p>
+      <p class="para-ar">هذا الموضوع مهم بالنسبة لي لأنني كشاب يعتمد على التكنولوجيا في الدراسة والتواصل، أشعر بمسؤولية شخصية تجاه اتخاذ خيارات أكثر استدامة. كل هاتف أو حاسوب أمتلكه سيتحول إلى نفايات إلكترونية، مما يجعل هذه القضية مرتبطة مباشرة بأسلوب حياتي.</p>
+    </div>
+
+    <div class="section-block">
+      <div class="section-label lbl-p">P <span class="ar-label">— خطة</span></div>
+      <p class="para-en"><span class="kw-frame">After learning about</span> this topic, I <span class="kw-p">plan to start</span> by properly disposing of my old devices at designated recycling points. <span class="kw-frame">Within the next two weeks</span>, I will <span class="kw-p">share information</span> about e-waste recycling with my family and classmates through our group chat.</p>
+      <p class="para-ar">بعد تعلمي هذا الموضوع، أخطط للبدء بالتخلص من أجهزتي القديمة في نقاط إعادة التدوير المخصصة. وخلال الأسبوعين القادمين، سأشارك معلومات حول إعادة تدوير النفايات الإلكترونية مع عائلتي وزملائي.</p>
+    </div>
+  </div>
+
+  <div class="full-para-box">
+    <div class="full-para-header">Full Paragraph — E-waste <span>الفقرة الكاملة</span></div>
+    <div class="full-para-body">
+      <p>The lecture discussed the growing problem of <span class="kw-d">electronic waste</span>, commonly known as <span class="kw-d">e-waste</span>, which refers to <span class="kw-d">discarded electronic devices</span> such as smartphones and laptops that release <span class="kw-d">toxic substances</span> into the environment when improperly disposed of. <span class="kw-frame">After learning about</span> this topic, I felt both <span class="kw-i">worried</span> and <span class="kw-i">motivated</span> — worried because I had never considered the environmental impact of my own devices, and motivated because I realized that simple personal actions can create real change. This topic is <span class="kw-e">important to me</span> because, <span class="kw-frame">as a young adult</span> who depends on technology daily, I feel <span class="kw-e">personally responsible</span> for making more <span class="kw-e">sustainable choices</span> in how I use and discard electronics. <span class="kw-frame">After learning about</span> e-waste, I <span class="kw-p">plan to start</span> by disposing of my old devices at certified recycling centers, and <span class="kw-frame">within the next two weeks</span>, I will <span class="kw-p">share information</span> on proper e-waste disposal with my family and classmates.</p>
+      <div class="legend">
+        <div class="legend-item"><div class="legend-dot" style="background:var(--blue-muted);"></div>Describe</div>
+        <div class="legend-item"><div class="legend-dot" style="background:var(--amber-muted);"></div>Interpret</div>
+        <div class="legend-item"><div class="legend-dot" style="background:var(--teal-muted);"></div>Evaluate</div>
+        <div class="legend-item"><div class="legend-dot" style="background:var(--pink-muted);"></div>Plan</div>
+        <div class="legend-item"><div class="legend-dot" style="background:var(--amber-light);border:1.5px dashed var(--amber-mid);"></div>Frame phrases الجمل الإطارية</div>
+      </div>
+      <div class="words-count"><span class="dot-green"></span> ~155 words ✓ &nbsp;|&nbsp; One paragraph ✓ &nbsp;|&nbsp; All DIEP components ✓</div>
+    </div>
+  </div>
+
+  <!-- =================== TOPIC 2: SOLAR PANELS =================== -->
+  <h2 class="section-heading">
+    <span class="topic-icon-lg" style="background:var(--amber-light);color:#633806;">☀</span>
+    Topic 2 — Solar Panels
+  </h2>
+
+  <div class="topic-card">
+    <div class="topic-header">
+      <div class="topic-icon" style="background:var(--amber-light);color:#633806;">☀</div>
+      <div>
+        <div class="topic-title-en">Solar Energy / Solar Panels</div>
+        <div class="topic-title-ar">الطاقة الشمسية / الألواح الشمسية</div>
+      </div>
+    </div>
+
+    <div class="section-block">
+      <div class="section-label lbl-d">D <span class="ar-label">— وصف</span></div>
+      <p class="para-en">The passage explained that <span class="kw-d">solar panels</span> are devices that <span class="kw-d">convert sunlight into electricity</span> using photovoltaic cells. The topic highlighted that <span class="kw-d">renewable energy</span> from solar panels can significantly reduce a household's dependence on <span class="kw-d">fossil fuels</span>, lowering both electricity costs and <span class="kw-d">carbon emissions</span> over time.</p>
+      <p class="para-ar">شرح النص أن الألواح الشمسية هي أجهزة تحوّل ضوء الشمس إلى كهرباء باستخدام الخلايا الكهروضوئية. وأبرز الموضوع أن الطاقة المتجددة من الألواح الشمسية يمكن أن تُقلل بشكل كبير من اعتماد المنازل على الوقود الأحفوري، مما يُخفض تكاليف الكهرباء وانبعاثات الكربون.</p>
+    </div>
+
+    <div class="section-block">
+      <div class="section-label lbl-i">I <span class="ar-label">— تفسير</span></div>
+      <p class="para-en"><span class="kw-frame">After reading the passage</span>, I felt genuinely <span class="kw-i">hopeful</span> because it reminded me that clean and sustainable alternatives to fossil fuels already exist and are becoming more accessible. I also felt <span class="kw-i">curious</span> because I wanted to know whether solar panels could realistically be installed in homes in my country and what the cost would be.</p>
+      <p class="para-ar">بعد قراءة النص، شعرت بأمل حقيقي لأنه ذكّرني بأن بدائل نظيفة ومستدامة للوقود الأحفوري موجودة بالفعل وتصبح أكثر سهولة في الوصول إليها. كما شعرت بالفضول لأنني أردت معرفة ما إذا كان بالإمكان تركيب الألواح الشمسية في المنازل في بلدي وما هي التكلفة.</p>
+    </div>
+
+    <div class="section-block">
+      <div class="section-label lbl-e">E <span class="ar-label">— تقييم</span></div>
+      <p class="para-en">This topic is <span class="kw-e">highly relevant to me</span> <span class="kw-frame">as an engineering student</span> because understanding <span class="kw-e">sustainable energy systems</span> is a core part of modern engineering design. Furthermore, rising electricity bills in my household make <span class="kw-e">solar energy</span> a genuinely practical and important solution worth exploring.</p>
+      <p class="para-ar">هذا الموضوع ذو صلة كبيرة بي كطالب هندسة لأن فهم أنظمة الطاقة المستدامة يُعدّ جزءاً أساسياً من تصميم الهندسة الحديثة. علاوة على ذلك، فإن ارتفاع فواتير الكهرباء في منزلنا يجعل الطاقة الشمسية حلاً عملياً يستحق الاستكشاف.</p>
+    </div>
+
+    <div class="section-block">
+      <div class="section-label lbl-p">P <span class="ar-label">— خطة</span></div>
+      <p class="para-en"><span class="kw-frame">Starting this month</span>, I <span class="kw-p">plan to research</span> the cost and availability of solar panel installation in my region. I will also <span class="kw-p">discuss the idea</span> with my family and present the potential long-term savings to encourage them to consider this sustainable option.</p>
+      <p class="para-ar">ابتداءً من هذا الشهر، أخطط للبحث في تكلفة وتوافر تركيب الألواح الشمسية في منطقتي. كما سأناقش الفكرة مع عائلتي وأُقدّم لهم حسابات التوفير المحتملة على المدى البعيد.</p>
+    </div>
+  </div>
+
+  <div class="full-para-box">
+    <div class="full-para-header">Full Paragraph — Solar Panels <span>الفقرة الكاملة</span></div>
+    <div class="full-para-body">
+      <p>The passage explained that <span class="kw-d">solar panels</span> are devices that <span class="kw-d">convert sunlight into electricity</span> through photovoltaic cells, offering a <span class="kw-d">renewable energy</span> solution that reduces reliance on <span class="kw-d">fossil fuels</span> and lowers <span class="kw-d">carbon emissions</span>. <span class="kw-frame">After reading the passage</span>, I felt genuinely <span class="kw-i">hopeful</span> because it reassured me that clean alternatives already exist and are becoming more accessible, and I also felt <span class="kw-i">curious</span> about whether solar panels could realistically be adopted in my own home. This topic is <span class="kw-e">highly relevant to me</span> <span class="kw-frame">as an engineering student</span>, since understanding <span class="kw-e">sustainable energy systems</span> is essential to modern engineering, and rising household electricity costs make solar power a genuinely practical concern. <span class="kw-frame">Starting this month</span>, I <span class="kw-p">plan to research</span> the cost of solar panel installation in my region and <span class="kw-p">discuss the idea</span> with my family by presenting the potential long-term savings.</p>
+      <div class="legend">
+        <div class="legend-item"><div class="legend-dot" style="background:var(--blue-muted);"></div>Describe</div>
+        <div class="legend-item"><div class="legend-dot" style="background:var(--amber-muted);"></div>Interpret</div>
+        <div class="legend-item"><div class="legend-dot" style="background:var(--teal-muted);"></div>Evaluate</div>
+        <div class="legend-item"><div class="legend-dot" style="background:var(--pink-muted);"></div>Plan</div>
+        <div class="legend-item"><div class="legend-dot" style="background:var(--amber-light);border:1.5px dashed var(--amber-mid);"></div>Frame phrases</div>
+      </div>
+      <div class="words-count"><span class="dot-green"></span> ~158 words ✓ &nbsp;|&nbsp; One paragraph ✓</div>
+    </div>
+  </div>
+
+  <!-- =================== TOPIC 3: PRINTING MONEY =================== -->
+  <h2 class="section-heading">
+    <span class="topic-icon-lg" style="background:var(--teal-light);color:#3B6D11;">$</span>
+    Topic 3 — Printing Money
+  </h2>
+
+  <div class="topic-card">
+    <div class="topic-header">
+      <div class="topic-icon" style="background:var(--teal-light);color:#3B6D11;">$</div>
+      <div>
+        <div class="topic-title-en">Printing Money / Inflation</div>
+        <div class="topic-title-ar">طباعة النقود / التضخم</div>
+      </div>
+    </div>
+
+    <div class="section-block">
+      <div class="section-label lbl-d">D <span class="ar-label">— وصف</span></div>
+      <p class="para-en">The lecture explained that <span class="kw-d">printing money</span>, also known as <span class="kw-d">monetary expansion</span>, occurs when governments increase the <span class="kw-d">money supply</span> beyond what the economy produces. This can lead to <span class="kw-d">inflation</span>, which means prices of goods and services rise, reducing the <span class="kw-d">purchasing power</span> of citizens over time.</p>
+      <p class="para-ar">شرحت المحاضرة أن طباعة النقود أو ما يُعرف بالتوسع النقدي يحدث عندما تزيد الحكومات من المعروض النقدي بما يتجاوز ما ينتجه الاقتصاد. وهذا يمكن أن يؤدي إلى التضخم، مما يعني ارتفاع أسعار السلع والخدمات وانخفاض القوة الشرائية للمواطنين.</p>
+    </div>
+
+    <div class="section-block">
+      <div class="section-label lbl-i">I <span class="ar-label">— تفسير</span></div>
+      <p class="para-en"><span class="kw-frame">After listening to the lecture</span>, I felt <span class="kw-i">anxious</span> because I realized that economic decisions made by governments can directly affect ordinary people like my family. I also felt <span class="kw-i">confused</span> at first, because I had always assumed that printing more money would make a country richer, but the lecture completely changed my understanding.</p>
+      <p class="para-ar">بعد الاستماع إلى المحاضرة، شعرت بالقلق لأنني أدركت أن القرارات الاقتصادية التي تتخذها الحكومات يمكن أن تؤثر مباشرة على الناس العاديين كعائلتي. كما شعرت بالارتباك في البداية، لأنني كنت أفترض أن طباعة المزيد من النقود ستُغني البلد، لكن المحاضرة غيّرت فهمي تماماً.</p>
+    </div>
+
+    <div class="section-block">
+      <div class="section-label lbl-e">E <span class="ar-label">— تقييم</span></div>
+      <p class="para-en">This topic is <span class="kw-e">important to me</span> because understanding <span class="kw-e">inflation and monetary policy</span> helps me make smarter financial decisions in my personal life. <span class="kw-frame">As a young adult</span> who is starting to manage my own finances, knowing how <span class="kw-e">economic forces</span> affect the value of money directly shapes how I save and spend.</p>
+      <p class="para-ar">هذا الموضوع مهم بالنسبة لي لأن فهم التضخم والسياسة النقدية يساعدني على اتخاذ قرارات مالية أذكى في حياتي الشخصية. كشاب بدأ يدير شؤونه المالية بنفسه، فإن معرفة كيفية تأثير القوى الاقتصادية على قيمة المال تُشكّل مباشرة طريقة ادخاري وإنفاقي.</p>
+    </div>
+
+    <div class="section-block">
+      <div class="section-label lbl-p">P <span class="ar-label">— خطة</span></div>
+      <p class="para-en"><span class="kw-frame">Beginning next week</span>, I <span class="kw-p">plan to read</span> more about how inflation has affected different countries and how individuals can protect their savings. I will also <span class="kw-p">start tracking</span> my monthly expenses to better understand how price changes impact my own budget.</p>
+      <p class="para-ar">بدءاً من الأسبوع القادم، أخطط لقراءة المزيد حول كيفية تأثير التضخم على مختلف الدول وكيف يمكن للأفراد حماية مدخراتهم. كما سأبدأ في تتبع نفقاتي الشهرية لأفهم كيف تؤثر تغيرات الأسعار على ميزانيتي.</p>
+    </div>
+  </div>
+
+  <div class="full-para-box">
+    <div class="full-para-header">Full Paragraph — Printing Money <span>الفقرة الكاملة</span></div>
+    <div class="full-para-body">
+      <p>The lecture explained that <span class="kw-d">printing money</span>, or <span class="kw-d">monetary expansion</span>, occurs when governments increase the <span class="kw-d">money supply</span> beyond the economy's output, leading to <span class="kw-d">inflation</span> that erodes citizens' <span class="kw-d">purchasing power</span>. <span class="kw-frame">After listening to the lecture</span>, I felt <span class="kw-i">anxious</span> because I realized that government economic decisions can directly affect ordinary families like mine, and I also felt <span class="kw-i">confused</span> because I had wrongly assumed that printing more money would make a country wealthier. This topic is <span class="kw-e">important to me</span> because understanding <span class="kw-e">inflation and monetary policy</span> directly affects how I manage my personal finances — <span class="kw-frame">as a young adult</span> beginning to handle my own money, knowing how <span class="kw-e">economic forces</span> shape prices helps me make more informed decisions about saving. <span class="kw-frame">Beginning next week</span>, I <span class="kw-p">plan to read</span> more about inflation's global effects and <span class="kw-p">start tracking</span> my monthly expenses to understand how price changes affect my budget.</p>
+      <div class="legend">
+        <div class="legend-item"><div class="legend-dot" style="background:var(--blue-muted);"></div>Describe</div>
+        <div class="legend-item"><div class="legend-dot" style="background:var(--amber-muted);"></div>Interpret</div>
+        <div class="legend-item"><div class="legend-dot" style="background:var(--teal-muted);"></div>Evaluate</div>
+        <div class="legend-item"><div class="legend-dot" style="background:var(--pink-muted);"></div>Plan</div>
+        <div class="legend-item"><div class="legend-dot" style="background:var(--amber-light);border:1.5px dashed var(--amber-mid);"></div>Frame phrases</div>
+      </div>
+      <div class="words-count"><span class="dot-green"></span> ~162 words ✓ &nbsp;|&nbsp; One paragraph ✓</div>
+    </div>
+  </div>
+
+  <!-- =================== TOPIC 4: PRODUCT DIFFERENTIATION =================== -->
+  <h2 class="section-heading">
+    <span class="topic-icon-lg" style="background:var(--pink-light);color:#993556;">★</span>
+    Topic 4 — Product Differentiation
+  </h2>
+
+  <div class="topic-card">
+    <div class="topic-header">
+      <div class="topic-icon" style="background:var(--pink-light);color:#993556;">★</div>
+      <div>
+        <div class="topic-title-en">Product Differentiation</div>
+        <div class="topic-title-ar">تمييز المنتجات</div>
+      </div>
+    </div>
+
+    <div class="section-block">
+      <div class="section-label lbl-d">D <span class="ar-label">— وصف</span></div>
+      <p class="para-en">The lecture introduced the concept of <span class="kw-d">product differentiation</span>, which refers to the strategies businesses use to make their <span class="kw-d">products or services stand out</span> from competitors. Key methods include <span class="kw-d">unique features</span>, superior quality, <span class="kw-d">branding</span>, and customer service, all aimed at creating a <span class="kw-d">competitive advantage</span> in the market.</p>
+      <p class="para-ar">قدّمت المحاضرة مفهوم تمييز المنتجات، وهو الاستراتيجيات التي تستخدمها الشركات لتمييز منتجاتها عن المنافسين. وتشمل الأساليب الرئيسية: الميزات الفريدة، والجودة العالية، والعلامة التجارية، وخدمة العملاء — كلها تهدف إلى خلق ميزة تنافسية في السوق.</p>
+    </div>
+
+    <div class="section-block">
+      <div class="section-label lbl-i">I <span class="ar-label">— تفسير</span></div>
+      <p class="para-en"><span class="kw-frame">The lecture made me feel</span> <span class="kw-i">inspired</span> because it explained something I see every day — like why people choose iPhone over Android — in a clear academic framework. I also felt <span class="kw-i">excited</span> because, as someone who dreams of starting a business, this knowledge felt directly applicable to my future goals.</p>
+      <p class="para-ar">جعلتني المحاضرة أشعر بالإلهام لأنها شرحت شيئاً أراه كل يوم — مثل سبب اختيار الناس لـ iPhone على Android — بإطار أكاديمي واضح. كما شعرت بالحماس لأنني كشخص يحلم بإطلاق مشروعه الخاص، شعرت أن هذه المعرفة تنطبق مباشرة على أهدافي المستقبلية.</p>
+    </div>
+
+    <div class="section-block">
+      <div class="section-label lbl-e">E <span class="ar-label">— تقييم</span></div>
+      <p class="para-en">This topic is <span class="kw-e">highly relevant</span> to me <span class="kw-frame">as a future entrepreneur</span> because understanding how to differentiate a product is essential for any <span class="kw-e">business to survive</span> in competitive markets. Without this knowledge, it would be difficult to attract customers and establish a <span class="kw-e">strong brand identity</span>.</p>
+      <p class="para-ar">هذا الموضوع ذو صلة كبيرة بي كرائد أعمال مستقبلي لأن فهم كيفية تمييز المنتج ضروري لأي عمل تجاري يريد البقاء في الأسواق التنافسية. وبدون هذه المعرفة، سيكون من الصعب جذب العملاء وبناء هوية علامة تجارية قوية.</p>
+    </div>
+
+    <div class="section-block">
+      <div class="section-label lbl-p">P <span class="ar-label">— خطة</span></div>
+      <p class="para-en"><span class="kw-frame">In my next project</span>, I <span class="kw-p">plan to apply</span> the concept of product differentiation by identifying the unique value my idea can offer. <span class="kw-frame">Starting this week</span>, I will <span class="kw-p">analyze two competing brands</span> to better understand how they differentiate themselves successfully.</p>
+      <p class="para-ar">في مشروعي القادم، أخطط لتطبيق مفهوم تمييز المنتج من خلال تحديد القيمة الفريدة التي يمكن أن تقدمها فكرتي. وابتداءً من هذا الأسبوع، سأحلل علامتين تجاريتين متنافستين لأفهم كيف تميزان نفسيهما بنجاح.</p>
+    </div>
+  </div>
+
+  <div class="full-para-box">
+    <div class="full-para-header">Full Paragraph — Product Differentiation <span>الفقرة الكاملة</span></div>
+    <div class="full-para-body">
+      <p>The lecture introduced the concept of <span class="kw-d">product differentiation</span>, referring to the strategies companies use to make their <span class="kw-d">products or services stand out</span> through <span class="kw-d">unique features</span>, <span class="kw-d">branding</span>, and superior quality in order to gain a <span class="kw-d">competitive advantage</span>. <span class="kw-frame">The lecture made me feel</span> <span class="kw-i">inspired</span>, as it provided a clear academic explanation for consumer behaviors I witness daily, and I also felt <span class="kw-i">excited</span> because, as someone with entrepreneurial ambitions, this knowledge felt directly relevant to my future goals. This topic is <span class="kw-e">highly relevant</span> <span class="kw-frame">as a future entrepreneur</span>, since understanding how to differentiate a product is essential for any <span class="kw-e">business to survive</span> in competitive markets and establish a <span class="kw-e">strong brand identity</span>. <span class="kw-frame">In my next project</span>, I <span class="kw-p">plan to apply</span> this concept by identifying my idea's unique value, and <span class="kw-frame">starting this week</span> I will <span class="kw-p">analyze two competing brands</span> to understand successful differentiation strategies.</p>
+      <div class="legend">
+        <div class="legend-item"><div class="legend-dot" style="background:var(--blue-muted);"></div>Describe</div>
+        <div class="legend-item"><div class="legend-dot" style="background:var(--amber-muted);"></div>Interpret</div>
+        <div class="legend-item"><div class="legend-dot" style="background:var(--teal-muted);"></div>Evaluate</div>
+        <div class="legend-item"><div class="legend-dot" style="background:var(--pink-muted);"></div>Plan</div>
+        <div class="legend-item"><div class="legend-dot" style="background:var(--amber-light);border:1.5px dashed var(--amber-mid);"></div>Frame phrases</div>
+      </div>
+      <div class="words-count"><span class="dot-green"></span> ~157 words ✓ &nbsp;|&nbsp; One paragraph ✓</div>
+    </div>
+  </div>
+
+  <!-- =================== QUICK REFERENCE =================== -->
+  <h2 class="section-heading">Quick Reference — الملخص السريع</h2>
+  <div class="ref-grid">
+    <div class="ref-row">
+      <div class="ref-badge" style="background:var(--blue-muted);color:var(--blue-dark);">D</div>
+      <div>
+        <div class="ref-title">Describe — صف ماذا تعلمت</div>
+        <div class="ref-phrase">"The lecture discussed / explained / highlighted that..."</div>
+        <div class="ref-ar">فكرة واحدة محددة + معلومة دقيقة من الموضوع — لا نسخ!</div>
+      </div>
+    </div>
+    <div class="ref-row">
+      <div class="ref-badge" style="background:var(--amber-muted);color:var(--amber-dark);">I</div>
+      <div>
+        <div class="ref-title">Interpret — فسّر مشاعرك</div>
+        <div class="ref-phrase">"After reading/listening, I felt [emotion] because [personal reason]..."</div>
+        <div class="ref-ar">شعور + because + سبب شخصي خاص بك — مش عام!</div>
+      </div>
+    </div>
+    <div class="ref-row">
+      <div class="ref-badge" style="background:var(--teal-muted);color:var(--teal-dark);">E</div>
+      <div>
+        <div class="ref-title">Evaluate — قيّم الأهمية</div>
+        <div class="ref-phrase">"This topic is important to me because... / As a [role], this is relevant because..."</div>
+        <div class="ref-ar">ليش مهم لك أنت شخصياً — مش للمجتمع بشكل عام!</div>
+      </div>
+    </div>
+    <div class="ref-row">
+      <div class="ref-badge" style="background:var(--pink-muted);color:var(--pink-dark);">P</div>
+      <div>
+        <div class="ref-title">Plan — ضع خطة واقعية</div>
+        <div class="ref-phrase">"Starting this week / Within the next two weeks, I plan to..."</div>
+        <div class="ref-ar">خطة قريبة + واقعية + محددة — مش أحلام بعيدة!</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    استعداد للكتابة؟ اتبع DIEP بالترتيب — فقرة واحدة — 150 كلمة فأكثر 🎯<br>
+    Prepared using course materials by Dr. Miriam Villaroman-Cordova
+  </div>
+
+</div>
+</body>
+</html>
